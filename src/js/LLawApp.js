@@ -1,6 +1,7 @@
 import '../css/LLawApp.css';
 import LLawFooter from './layout/LLawFooter';
 import LLawNavbar from './layout/LLawNavbar';
+import LLawDialog from './components/LLawDialog';
 
 function LLawApp() {
   return (
@@ -11,8 +12,9 @@ function LLawApp() {
           Content
       </h1>
       </header>
+      
       <div className="main-content">
-
+        <LLawDialog />
       </div>
       <LLawFooter />
     </div>

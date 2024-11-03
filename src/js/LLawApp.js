@@ -2,17 +2,19 @@ import '../css/LLawApp.css';
 import LLawFooter from './layout/LLawFooter';
 import LLawNavbar from './layout/LLawNavbar';
 import LLawDialog from './components/LLawDialog';
+import LLContactPage from './components/pages/LLContactPage';
+import { Routes, Route } from 'react-router-dom';
 
 function LLawApp() {
   return (
     <div className="LLawApp">
       <LLawNavbar />
-      <header className="LLawApp-header">
-      <h1 className="text-3xl font-bold underline mt-10 text-center">
-          Content
-      </h1>
-      </header>
-      
+      <Routes>
+          {/* <Route path="/" element={<Home />} /> */}
+          {/* <Route path="/about" element={<About />} /> */}
+          <Route path="/contact" element={<LLContactPage />} />
+          {/* <Route path="*" element={<NotFound />} /> */}
+      </Routes>
       <div className="main-content">
         <LLawDialog />
       </div>

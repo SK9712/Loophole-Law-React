@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
+import { Link, useLocation } from 'react-router-dom';
 
 const LLawNavbar = () => {
+  const location = useLocation();
+
+  const isActive = (path) => {
+    return location.pathname === path ? 
+      "text-white-600" : "text-gray-600 hover:text-white-600";
+  };
   // State to manage the navbar's visibility
   const [nav, setNav] = useState(false);
 
@@ -12,11 +19,11 @@ const LLawNavbar = () => {
 
   // Array containing navigation items
   const navItems = [
-    { id: 1, text: 'Home' },
-    { id: 2, text: 'Company' },
-    { id: 3, text: 'Resources' },
-    { id: 4, text: 'About' },
-    { id: 5, text: 'Contact' },
+    { id: 1, text: 'Home' , component: '/'},
+    { id: 2, text: 'Company' , component: '/company'},
+    { id: 3, text: 'Resources' , component: '/resources'},
+    { id: 4, text: 'About' , component: '/about'},
+    { id: 5, text: 'Contact', component: '/contact'},
   ];
 
   return (
@@ -32,7 +39,9 @@ const LLawNavbar = () => {
             key={item.id}
             className='p-4 hover:bg-[#00df9a] rounded-xl m-2 cursor-pointer duration-300 hover:text-black'
           >
-            {item.text}
+            <Link to={item.component} className={`transition-colors duration-200 ${isActive(item.component)}`}>
+              {item.text}
+            </Link>
           </li>
         ))}
       </ul>

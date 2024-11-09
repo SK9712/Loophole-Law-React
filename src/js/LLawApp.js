@@ -8,6 +8,7 @@ import LLawNavbar from './layout/LLawNavbar';
 import LLawDialog from './components/LLawDialog';
 import LLContactPage from './components/pages/LLContactPage';
 import LLandingPage from './components/pages/LLandingPage';
+import LLAboutPage from './components/pages/LLAboutPage';
 import { Routes, Route } from 'react-router-dom';
 
 function LLawApp() {
@@ -23,7 +24,7 @@ function LLawApp() {
       <main className="flex-1 mt-24">
         <Routes>
           <Route path="/" element={<LLandingPage />} />
-          {/* <Route path="/about" element={<About />} /> */}
+          <Route path="/about" element={<LLAboutPage />} />
           <Route path="/contact" element={<LLContactPage />} />
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>

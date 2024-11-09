@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Scale, ChevronDown } from 'lucide-react';
 
 // Menu Icons as components using SVG
@@ -40,8 +40,9 @@ const LLawNavbar = () => {
   const [nav, setNav] = useState(false);
   const [currentPath, setCurrentPath] = useState('');
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [dropdownTimeout, setDropdownTimeout] = useState(null);
 
-  // Define navItems within the component
+  // Define navItems
   const navItems = [
     { 
       id: 1, 
@@ -99,21 +100,28 @@ const LLawNavbar = () => {
     }
   ];
 
-  // Update current path on mount and when URL changes
   useEffect(() => {
     const updatePath = () => {
       setCurrentPath(window.location.pathname);
     };
-
-    // Set initial path
     updatePath();
-
-    // Listen for route changes
     window.addEventListener('popstate', updatePath);
-
     return () => {
       window.removeEventListener('popstate', updatePath);
+      if (dropdownTimeout) clearTimeout(dropdownTimeout);
     };
+  }, [dropdownTimeout]);
+
+  const handleMouseEnter = useCallback((id) => {
+    if (dropdownTimeout) clearTimeout(dropdownTimeout);
+    setActiveDropdown(id);
+  }, [dropdownTimeout]);
+
+  const handleMouseLeave = useCallback(() => {
+    const timeout = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 150);
+    setDropdownTimeout(timeout);
   }, []);
 
   const handleLinkClick = (href, e) => {
@@ -133,7 +141,7 @@ const LLawNavbar = () => {
           onClick={(e) => handleLinkClick('/', e)}
         >
           <Scale className="w-8 h-8 text-blue-400" />
-          <h1 className='text-2xl font-bold text-green-400'>LoopholeLaw.</h1>
+          <h1 className='text-2xl font-bold text-green-400'>LoopHoleLaw.</h1>
         </a>
 
         {/* Desktop Navigation */}
@@ -141,9 +149,9 @@ const LLawNavbar = () => {
           {navItems.map(item => (
             <li 
               key={item.id}
-              className="relative"
-              onMouseEnter={() => setActiveDropdown(item.id)}
-              onMouseLeave={() => setActiveDropdown(null)}
+              className="relative group"
+              onMouseEnter={() => handleMouseEnter(item.id)}
+              onMouseLeave={handleMouseLeave}
             >
               <a
                 href={item.href}
@@ -155,22 +163,28 @@ const LLawNavbar = () => {
                 aria-current={isActive(item.href) ? 'page' : undefined}
               >
                 {item.text}
-                {item.subItems && <ChevronDown className="w-4 h-4" />}
+                {item.subItems && <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />}
               </a>
 
               {/* Dropdown Menu */}
               {item.subItems && activeDropdown === item.id && (
-                <div className="absolute top-full left-0 mt-2 w-60 py-2 bg-slate-900 rounded-lg shadow-xl border border-slate-800">
-                  {item.subItems.map((subItem, index) => (
-                    <a
-                      key={index}
-                      href={subItem.href}
-                      onClick={(e) => handleLinkClick(subItem.href, e)}
-                      className="block px-4 py-2 text-gray-300 hover:bg-green-400/10 hover:text-green-400 transition-colors"
-                    >
-                      {subItem.text}
-                    </a>
-                  ))}
+                <div 
+                  className="absolute top-full left-0 pt-2 w-60"
+                  onMouseEnter={() => handleMouseEnter(item.id)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <div className="py-2 bg-slate-900 rounded-lg shadow-xl border border-slate-800">
+                    {item.subItems.map((subItem, index) => (
+                      <a
+                        key={index}
+                        href={subItem.href}
+                        onClick={(e) => handleLinkClick(subItem.href, e)}
+                        className="block px-4 py-2 text-gray-300 hover:bg-green-400/10 hover:text-green-400 transition-colors"
+                      >
+                        {subItem.text}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               )}
             </li>
@@ -179,7 +193,7 @@ const LLawNavbar = () => {
 
         {/* Mobile Menu Button */}
         <button 
-          onClick={() => setNav(!nav)} 
+          onClick={() => setNav(!nav)}
           className='block md:hidden text-green-400 p-2 hover:bg-green-400/10 rounded-lg transition-colors'
           aria-label={nav ? 'Close menu' : 'Open menu'}
         >
@@ -202,7 +216,7 @@ const LLawNavbar = () => {
             <div className='flex items-center justify-between mb-8'>
               <div className='flex items-center gap-2'>
                 <Scale className="w-6 h-6 text-blue-400" />
-                <span className='text-xl font-bold text-green-400'>LoopholeLaw.</span>
+                <span className='text-xl font-bold text-green-400'>LoopHoleLaw.</span>
               </div>
               <button
                 onClick={() => setNav(false)}

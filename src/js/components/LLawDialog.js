@@ -37,7 +37,7 @@ export default function LLawDialog() {
         {/* Header with Logo */}
         <div className="flex items-center gap-3 p-4 sm:p-6 bg-black">
           <Scale className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
-          <h2 className="text-lg sm:text-xl font-bold text-green-400">LoopholeLaw.</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-green-400">LoopHoleLaw.</h2>
         </div>
 
         {/* User Acknowledgement Section */}

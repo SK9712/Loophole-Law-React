@@ -70,7 +70,7 @@ function LLawFooter() {
                         {/* Logo */}
                         <div className="flex items-center gap-2">
                             <Scale className="w-8 h-8 text-blue-400" />
-                            <span className="text-xl font-bold text-green-400">LoopholeLaw.</span>
+                            <span className="text-xl font-bold text-green-400">LoopHoleLaw.</span>
                         </div>
 
                         {/* Navigation Links */}
@@ -103,7 +103,7 @@ function LLawFooter() {
 
                     <hr className="border-gray-600 my-8" />
                     <p className="text-center text-gray-600">
-                        Copyright © 2024 LoopholeLaw. All rights reserved.
+                        Copyright © 2024 LoopHoleLaw. All rights reserved.
                     </p>
                 </div>
             </div>

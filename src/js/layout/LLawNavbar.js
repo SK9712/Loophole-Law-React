@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Scale } from 'lucide-react';
+import { Scale, ChevronDown } from 'lucide-react';
 
 // Menu Icons as components using SVG
 const MenuIcon = () => (
@@ -38,47 +38,100 @@ const CloseIcon = () => (
 
 const LLawNavbar = () => {
   const [nav, setNav] = useState(false);
-  const [currentPath, setCurrentPath] = useState('/');
+  const [currentPath, setCurrentPath] = useState('');
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
-  useEffect(() => {
-    setCurrentPath(window.location.pathname);
-  }, []);
-
-  const handleNav = () => {
-    setNav(!nav);
-  };
-
+  // Define navItems within the component
   const navItems = [
-    { id: 1, text: 'Home', href: '/'},
-    { id: 2, text: 'Company', href: '/company'},
-    { id: 3, text: 'Resources', href: '/resources'},
-    { id: 4, text: 'About', href: '/about'},
-    { id: 5, text: 'Contact', href: '/contact'},
+    { 
+      id: 1, 
+      text: 'Home', 
+      href: '/'
+    },
+    { 
+      id: 2, 
+      text: 'Practice Areas', 
+      href: '/practice-areas',
+      subItems: [
+        { text: 'Corporate Law', href: '/practice-areas/corporate' },
+        { text: 'Intellectual Property', href: '/practice-areas/ip' },
+        { text: 'Litigation', href: '/practice-areas/litigation' },
+        { text: 'Real Estate', href: '/practice-areas/real-estate' },
+        { text: 'Tax Law', href: '/practice-areas/tax' }
+      ]
+    },
+    { 
+      id: 3, 
+      text: 'Our Team', 
+      href: '/team',
+      subItems: [
+        { text: 'Attorneys', href: '/team/attorneys' },
+        { text: 'Partners', href: '/team/partners' },
+        { text: 'Legal Staff', href: '/team/staff' }
+      ]
+    },
+    { 
+      id: 4, 
+      text: 'Resources', 
+      href: '/resources',
+      subItems: [
+        { text: 'Blog', href: '/resources/blog' },
+        { text: 'Case Studies', href: '/resources/cases' },
+        { text: 'Publications', href: '/resources/publications' },
+        { text: 'FAQs', href: '/resources/faqs' }
+      ]
+    },
+    { 
+      id: 5, 
+      text: 'About', 
+      href: '/about',
+      subItems: [
+        { text: 'Our Story', href: '/about/story' },
+        { text: 'Mission & Values', href: '/about/mission' },
+        { text: 'Recognition', href: '/about/recognition' },
+        { text: 'Careers', href: '/about/careers' }
+      ]
+    },
+    { 
+      id: 6, 
+      text: 'Contact', 
+      href: '/contact'
+    }
   ];
 
+  // Update current path on mount and when URL changes
+  useEffect(() => {
+    const updatePath = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    // Set initial path
+    updatePath();
+
+    // Listen for route changes
+    window.addEventListener('popstate', updatePath);
+
+    return () => {
+      window.removeEventListener('popstate', updatePath);
+    };
+  }, []);
+
+  const handleLinkClick = (href, e) => {
+    setCurrentPath(href);
+    setNav(false);
+  };
+
   const isActive = (href) => currentPath === href;
-
-  const getLinkStyles = (href) => {
-    const baseStyles = 'px-4 py-2 rounded-lg transition-all duration-200';
-    const activeStyles = 'bg-green-400 text-black font-medium';
-    const inactiveStyles = 'text-gray-300 hover:bg-green-400 hover:text-black';
-    
-    return `${baseStyles} ${isActive(href) ? activeStyles : inactiveStyles}`;
-  };
-
-  const getMobileLinkStyles = (href) => {
-    const baseStyles = 'block px-4 py-3 rounded-lg transition-all duration-200';
-    const activeStyles = 'bg-green-400 text-black font-medium';
-    const inactiveStyles = 'text-gray-300 hover:bg-green-400 hover:text-black';
-    
-    return `${baseStyles} ${isActive(href) ? activeStyles : inactiveStyles}`;
-  };
 
   return (
     <div id='llawnavbar' className='bg-black fixed top-0 left-0 right-0 z-50'>
       <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4 text-white'>
         {/* Logo Section */}
-        <a href="/" className='flex items-center gap-2 hover:opacity-90 transition-opacity'>
+        <a 
+          href="/" 
+          className='flex items-center gap-2 hover:opacity-90 transition-opacity'
+          onClick={(e) => handleLinkClick('/', e)}
+        >
           <Scale className="w-8 h-8 text-blue-400" />
           <h1 className='text-2xl font-bold text-green-400'>LoopholeLaw.</h1>
         </a>
@@ -86,21 +139,47 @@ const LLawNavbar = () => {
         {/* Desktop Navigation */}
         <ul className='hidden md:flex items-center gap-1'>
           {navItems.map(item => (
-            <li key={item.id}>
+            <li 
+              key={item.id}
+              className="relative"
+              onMouseEnter={() => setActiveDropdown(item.id)}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
               <a
                 href={item.href}
-                className={getLinkStyles(item.href)}
+                onClick={(e) => handleLinkClick(item.href, e)}
+                className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-1
+                  ${isActive(item.href) 
+                    ? 'bg-green-400 text-black font-medium' 
+                    : 'text-gray-300 hover:bg-green-400/10 hover:text-green-400'}`}
                 aria-current={isActive(item.href) ? 'page' : undefined}
               >
                 {item.text}
+                {item.subItems && <ChevronDown className="w-4 h-4" />}
               </a>
+
+              {/* Dropdown Menu */}
+              {item.subItems && activeDropdown === item.id && (
+                <div className="absolute top-full left-0 mt-2 w-60 py-2 bg-slate-900 rounded-lg shadow-xl border border-slate-800">
+                  {item.subItems.map((subItem, index) => (
+                    <a
+                      key={index}
+                      href={subItem.href}
+                      onClick={(e) => handleLinkClick(subItem.href, e)}
+                      className="block px-4 py-2 text-gray-300 hover:bg-green-400/10 hover:text-green-400 transition-colors"
+                    >
+                      {subItem.text}
+                    </a>
+                  ))}
+                </div>
+              )}
             </li>
           ))}
         </ul>
 
         {/* Mobile Menu Button */}
         <button 
-          onClick={handleNav} 
+          onClick={() => setNav(!nav)} 
           className='block md:hidden text-green-400 p-2 hover:bg-green-400/10 rounded-lg transition-colors'
           aria-label={nav ? 'Close menu' : 'Open menu'}
         >
@@ -115,7 +194,7 @@ const LLawNavbar = () => {
         `}>
           <div className={`
             fixed top-0 right-0 h-full w-[280px] bg-black border-l border-gray-900
-            transform transition-transform duration-300 ease-in-out
+            transform transition-transform duration-300 ease-in-out overflow-y-auto
             ${nav ? 'translate-x-0' : 'translate-x-full'}
             p-6
           `}>
@@ -126,7 +205,7 @@ const LLawNavbar = () => {
                 <span className='text-xl font-bold text-green-400'>LoopholeLaw.</span>
               </div>
               <button
-                onClick={handleNav}
+                onClick={() => setNav(false)}
                 className='p-2 hover:bg-green-400/10 rounded-lg transition-colors text-green-400'
                 aria-label="Close menu"
               >
@@ -136,31 +215,37 @@ const LLawNavbar = () => {
 
             {/* Mobile Menu Items */}
             <nav>
-              <ul className='space-y-1'>
+              <ul className='space-y-4'>
                 {navItems.map(item => (
-                  <li key={item.id}>
+                  <li key={item.id} className="space-y-2">
                     <a
                       href={item.href}
-                      className={getMobileLinkStyles(item.href)}
-                      onClick={() => setNav(false)}
-                      aria-current={isActive(item.href) ? 'page' : undefined}
+                      onClick={(e) => handleLinkClick(item.href, e)}
+                      className={`block px-4 py-2 rounded-lg transition-all duration-200
+                        ${isActive(item.href) 
+                          ? 'bg-green-400 text-black font-medium' 
+                          : 'text-gray-300 hover:bg-green-400/10 hover:text-green-400'}`}
                     >
                       {item.text}
                     </a>
+                    {item.subItems && (
+                      <div className="pl-4 space-y-1">
+                        {item.subItems.map((subItem, index) => (
+                          <a
+                            key={index}
+                            href={subItem.href}
+                            onClick={(e) => handleLinkClick(subItem.href, e)}
+                            className="block px-4 py-2 text-sm text-gray-400 hover:text-green-400 transition-colors"
+                          >
+                            {subItem.text}
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
             </nav>
-
-            {/* Mobile Menu Footer */}
-            <div className='absolute bottom-8 left-6 right-6'>
-              <hr className='border-gray-800 mb-6' />
-              <div className='text-sm text-gray-500 flex justify-between'>
-                <a href="/privacy" className='hover:text-green-400 transition-colors'>Privacy</a>
-                <a href="/terms" className='hover:text-green-400 transition-colors'>Terms</a>
-                <a href="/contact" className='hover:text-green-400 transition-colors'>Contact</a>
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -54,6 +54,7 @@ const LLawNavbar = () => {
       text: 'Practice Areas', 
       href: '/practice-areas',
       subItems: [
+        { text: 'Criminal Law', href: '/practice-areas/criminal' },
         { text: 'Corporate Law', href: '/practice-areas/corporate' },
         { text: 'Intellectual Property', href: '/practice-areas/ip' },
         { text: 'Litigation', href: '/practice-areas/litigation' },
@@ -141,7 +142,10 @@ const LLawNavbar = () => {
           onClick={(e) => handleLinkClick('/', e)}
         >
           <Scale className="w-8 h-8 text-blue-400" />
-          <h1 className='text-2xl font-bold text-green-400'>LoopHoleLaw.</h1>
+          <h1 className='text-2xl font-bold'>
+              <span className="text-blue-400">Loophole</span>
+              <span className="text-green-400">Law.</span>
+          </h1>
         </a>
 
         {/* Desktop Navigation */}

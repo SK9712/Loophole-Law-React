@@ -9,6 +9,10 @@ import LLawDialog from './components/LLawDialog';
 import LLContactPage from './components/pages/LLContactPage';
 import LLandingPage from './components/pages/LLandingPage';
 import LLAboutPage from './components/pages/LLAboutPage';
+import LLFAQPage from './components/pages/LLFAQPage';
+import LLMissionValuesPage from './components/pages/LLMissionValuesPage';
+import LLAttorneysPage from './components/pages/LLAttorneysPage';
+import LLStoryPage from './components/pages/LLStoryPage';
 import { Routes, Route } from 'react-router-dom';
 
 function LLawApp() {
@@ -26,6 +30,10 @@ function LLawApp() {
           <Route path="/" element={<LLandingPage />} />
           <Route path="/about" element={<LLAboutPage />} />
           <Route path="/contact" element={<LLContactPage />} />
+          <Route path="/resources/faqs" element={<LLFAQPage />} />
+          <Route path="/about/mission" element={<LLMissionValuesPage />} />
+          <Route path="/about/story" element={<LLStoryPage />} />
+          <Route path="/team/attorneys" element={<LLAttorneysPage />} />
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
         {isLandingPage && <LLawDialog />}

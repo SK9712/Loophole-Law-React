@@ -70,7 +70,10 @@ function LLawFooter() {
                         {/* Logo */}
                         <div className="flex items-center gap-2">
                             <Scale className="w-8 h-8 text-blue-400" />
-                            <span className="text-xl font-bold text-green-400">LoopHoleLaw.</span>
+                            <span className="text-xl font-bold">
+                                    <span className="text-blue-400">Loophole</span>
+                                    <span className="text-green-400">Law.</span>
+                            </span>
                         </div>
 
                         {/* Navigation Links */}

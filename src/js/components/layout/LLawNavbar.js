@@ -57,6 +57,7 @@ const LLawNavbar = () => {
         { text: 'Criminal Law', href: '/practice-areas/criminal-law' },
         { text: 'Corporate Law', href: '/practice-areas/corporate-law' },
         { text: 'Intellectual Property', href: '/practice-areas/ip-law' },
+        { text: 'Family Law', href: '/practice-areas/family-law' },
         { text: 'Litigation', href: '/practice-areas/litigation-law' },
         { text: 'Real Estate', href: '/practice-areas/real-estate-law' },
         { text: 'Tax Law', href: '/practice-areas/tax-law' }

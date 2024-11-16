@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Scale } from 'lucide-react';
 
 const LLoaderScreen = ({ isLoading = true }) => {
@@ -8,92 +8,66 @@ const LLoaderScreen = ({ isLoading = true }) => {
     <div className="fixed inset-0 bg-gradient-to-b from-slate-900 to-black flex items-center justify-center z-50">
       <style>
         {`
-          @keyframes logoScale {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(0.95); }
-          }
-
-          @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-          }
-
-          @keyframes balance {
-            0% { transform: rotate(-10deg); }
-            50% { transform: rotate(10deg); }
-            100% { transform: rotate(-10deg); }
-          }
-
-          @keyframes dots {
-            0%, 20% {
-              content: ".";
+          @keyframes line-scale {
+            0% {
+              transform: scaleY(0.4);
+            }
+            20% {
+              transform: scaleY(1);
             }
             40% {
-              content: "..";
+              transform: scaleY(0.4);
             }
-            60%, 100% {
-              content: "...";
+            100% {
+              transform: scaleY(0.4);
             }
           }
 
-          .animate-balance {
-            animation: balance 3s ease-in-out infinite;
+          @keyframes subtle-fade {
+            0%, 100% {
+              opacity: 0.8;
+            }
+            50% {
+              opacity: 1;
+            }
           }
 
-          .loading-dots::after {
-            content: "";
-            animation: dots 1.5s infinite;
+          .loading-line {
+            animation: line-scale 1s infinite ease-in-out;
           }
 
-          .logo-wrapper {
-            animation: logoScale 2s ease-in-out infinite;
+          .fade-pulse {
+            animation: subtle-fade 2s infinite ease-in-out;
           }
 
-          .pulse-text {
-            animation: pulse 2s ease-in-out infinite;
-          }
-
-          @keyframes loading {
-            0% { width: 0%; }
-            50% { width: 70%; }
-            100% { width: 100%; }
-          }
-
-          .loading-bar {
-            animation: loading 2s ease-in-out infinite;
-          }
+          .line-1 { animation-delay: 0s; }
+          .line-2 { animation-delay: 0.1s; }
+          .line-3 { animation-delay: 0.2s; }
+          .line-4 { animation-delay: 0.3s; }
+          .line-5 { animation-delay: 0.4s; }
         `}
       </style>
 
-      <div className="text-center">
-        {/* Logo and Scale Animation */}
-        <div className="logo-wrapper mb-8">
-          <div className="relative">
-            <Scale className="w-20 h-20 text-blue-400 animate-balance mx-auto" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-          </div>
+      <div className="text-center space-y-6">
+        {/* Logo Icon */}
+        <Scale className="w-12 h-12 text-blue-400 mx-auto fade-pulse" />
+
+        {/* Animated Lines */}
+        <div className="flex justify-center items-center gap-1 h-8">
+          {[...Array(5)].map((_, index) => (
+            <div
+              key={index}
+              className={`w-1 h-full bg-gradient-to-t from-blue-400 to-green-400 rounded-full loading-line line-${index + 1}`}
+            ></div>
+          ))}
         </div>
 
         {/* Brand Name */}
-        <h1 className="text-3xl font-bold mb-4">
-          <span className="text-blue-400">Loop</span>
-          <span className="text-green-400">hole</span>
-          <span className="text-blue-400">Law</span>
-        </h1>
-
-        {/* Loading Text */}
-        <div className="flex items-center justify-center gap-2">
-          <p className="text-gray-400 text-lg loading-dots pulse-text">
-            Loading
-          </p>
-        </div>
-
-        {/* Loading Progress */}
-        <div className="max-w-xs mx-auto mt-6">
-          <div className="h-1 bg-slate-800 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-blue-400 to-green-400 loading-bar rounded-full">
-            </div>
-          </div>
+        <div className="fade-pulse">
+          <span className="text-xl font-medium">
+            <span className="text-blue-400">Loophole</span>
+            <span className="text-green-400">Law</span>
+          </span>
         </div>
       </div>
     </div>

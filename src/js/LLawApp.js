@@ -18,13 +18,16 @@ import LLStoryPage from './components/pages/about/LLStoryPage';
 
 import LLFAQPage from './components/pages/resources/LLFAQPage';
 
+import LLTeamPage from './components/pages/team/LLTeamPage';
 import LLAttorneysPage from './components/pages/team/LLAttorneysPage';
 import LLPartnersPage from './components/pages/team/LLPartnersPage';
 import LLegalStaffPage from './components/pages/team/LLegalStaffPage';
 
+import LLPracticeAreasPage from './components/pages/practice-areas/LLPracticeAreasPage';
 import LLCriminalLawPage from './components/pages/practice-areas/LLCriminalLawPage';
 import LLCorporateLawPage from './components/pages/practice-areas/LLCorporateLawPage';
 import LLIntellectualPropertyPage from './components/pages/practice-areas/LLIntellectualPropertyPage';
+import LLFamilyLawPage from './components/pages/practice-areas/LLFamilyLawPage';
 import LLitigationLawPage from './components/pages/practice-areas/LLitigationLawPage';
 import LLRealEstateLawPage from './components/pages/practice-areas/LLRealEstateLawPage';
 import LLTaxLawPage from './components/pages/practice-areas/LLTaxLawPage';
@@ -75,13 +78,16 @@ function LLawApp() {
           <Route path="/about/mission" element={<LLMissionValuesPage />} />
           <Route path="/about/story" element={<LLStoryPage />} />
 
+          <Route path="/team" element={<LLTeamPage />} />
           <Route path="/team/attorneys" element={<LLAttorneysPage />} />
           <Route path="/team/partners" element={<LLPartnersPage />} />
           <Route path="/team/staff" element={<LLegalStaffPage />} />
 
+          <Route path="/practice-areas" element={<LLPracticeAreasPage />} />
           <Route path="/practice-areas/criminal-law" element={<LLCriminalLawPage />} />
           <Route path="/practice-areas/corporate-law" element={<LLCorporateLawPage />} />
           <Route path="/practice-areas/ip-law" element={<LLIntellectualPropertyPage />} />
+          <Route path="/practice-areas/family-law" element={<LLFamilyLawPage />} />
           <Route path="/practice-areas/litigation-law" element={<LLitigationLawPage />} />
           <Route path="/practice-areas/real-estate-law" element={<LLRealEstateLawPage />} />
           <Route path="/practice-areas/tax-law" element={<LLTaxLawPage />} />

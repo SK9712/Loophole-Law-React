@@ -20,12 +20,12 @@ import LLFAQPage from './components/pages/resources/LLFAQPage';
 
 import LLAttorneysPage from './components/pages/team/LLAttorneysPage';
 import LLPartnersPage from './components/pages/team/LLPartnersPage';
-import LLLegalStaffPage from './components/pages/team/LLLegalStaffPage';
+import LLegalStaffPage from './components/pages/team/LLegalStaffPage';
 
 import LLCriminalLawPage from './components/pages/practice-areas/LLCriminalLawPage';
 import LLCorporateLawPage from './components/pages/practice-areas/LLCorporateLawPage';
 import LLIntellectualPropertyPage from './components/pages/practice-areas/LLIntellectualPropertyPage';
-import LLLitigationLawPage from './components/pages/practice-areas/LLLitigationLawPage';
+import LLitigationLawPage from './components/pages/practice-areas/LLitigationLawPage';
 import LLRealEstateLawPage from './components/pages/practice-areas/LLRealEstateLawPage';
 import LLTaxLawPage from './components/pages/practice-areas/LLTaxLawPage';
 
@@ -77,12 +77,12 @@ function LLawApp() {
 
           <Route path="/team/attorneys" element={<LLAttorneysPage />} />
           <Route path="/team/partners" element={<LLPartnersPage />} />
-          <Route path="/team/staff" element={<LLLegalStaffPage />} />
+          <Route path="/team/staff" element={<LLegalStaffPage />} />
 
           <Route path="/practice-areas/criminal-law" element={<LLCriminalLawPage />} />
           <Route path="/practice-areas/corporate-law" element={<LLCorporateLawPage />} />
           <Route path="/practice-areas/ip-law" element={<LLIntellectualPropertyPage />} />
-          <Route path="/practice-areas/litigation-law" element={<LLLitigationLawPage />} />
+          <Route path="/practice-areas/litigation-law" element={<LLitigationLawPage />} />
           <Route path="/practice-areas/real-estate-law" element={<LLRealEstateLawPage />} />
           <Route path="/practice-areas/tax-law" element={<LLTaxLawPage />} />
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Scale, FileText, Shield, Users, Clock, Award, Building2, Globe } from 'lucide-react';
 
-const LLLitigationLawPage = () => {
+const LLitigationLawPage = () => {
   const services = [
     {
       icon: <Scale className="w-6 h-6 text-blue-400" />,
@@ -310,4 +310,4 @@ const LLLitigationLawPage = () => {
   );
 };
 
-export default LLLitigationLawPage;
+export default LLitigationLawPage;

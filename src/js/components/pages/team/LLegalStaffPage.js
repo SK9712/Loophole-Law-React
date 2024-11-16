@@ -1,7 +1,7 @@
 import React from 'react';
-import { Users, Award, BookOpen, Scale, Globe, Star, GraduationCap, Briefcase } from 'lucide-react';
+import { Users, Scale, Globe, Star, GraduationCap, Briefcase } from 'lucide-react';
 
-const LLLegalStaffPage = () => {
+const LLegalStaffPage = () => {
   const teamCategories = [
     {
       title: "Associate Advocates",
@@ -249,4 +249,4 @@ const LLLegalStaffPage = () => {
   );
 };
 
-export default LLLegalStaffPage;
+export default LLegalStaffPage;

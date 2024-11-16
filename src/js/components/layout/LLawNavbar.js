@@ -54,18 +54,18 @@ const LLawNavbar = () => {
       text: 'Practice Areas', 
       href: '/practice-areas',
       subItems: [
-        { text: 'Criminal Law', href: '/practice-areas/criminal' },
-        { text: 'Corporate Law', href: '/practice-areas/corporate' },
-        { text: 'Intellectual Property', href: '/practice-areas/ip' },
-        { text: 'Litigation', href: '/practice-areas/litigation' },
-        { text: 'Real Estate', href: '/practice-areas/real-estate' },
-        { text: 'Tax Law', href: '/practice-areas/tax' }
+        { text: 'Criminal Law', href: '/practice-areas/criminal-law' },
+        { text: 'Corporate Law', href: '/practice-areas/corporate-law' },
+        { text: 'Intellectual Property', href: '/practice-areas/ip-law' },
+        { text: 'Litigation', href: '/practice-areas/litigation-law' },
+        { text: 'Real Estate', href: '/practice-areas/real-estate-law' },
+        { text: 'Tax Law', href: '/practice-areas/tax-law' }
       ]
     },
     { 
       id: 3, 
       text: 'Our Team', 
-      href: '/team',
+      href: '/team/attorneys',
       subItems: [
         { text: 'Attorneys', href: '/team/attorneys' },
         { text: 'Partners', href: '/team/partners' },

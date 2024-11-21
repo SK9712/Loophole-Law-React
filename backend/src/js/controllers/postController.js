@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const Category = require('../models/Category');
 
 // Create post
 exports.createPost = async (req, res) => {
@@ -160,6 +161,50 @@ exports.deletePost = async (req, res) => {
     res.json({
       success: true,
       data: {}
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+exports.getPostsByCategory = async (req, res) => {
+  try {
+    const category = await Category.findOne({ slug: req.params.slug });
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: 'Category not found'
+      });
+    }
+
+    const posts = await Post.find({ categories: category._id })
+      .populate('author', 'name')
+      .populate('categories', 'name slug');
+
+    res.json({
+      success: true,
+      data: posts
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+exports.getPostsByTag = async (req, res) => {
+  try {
+    const posts = await Post.find({ tags: req.params.tag })
+      .populate('author', 'name')
+      .populate('categories', 'name slug');
+
+    res.json({
+      success: true,
+      data: posts
     });
   } catch (error) {
     res.status(400).json({

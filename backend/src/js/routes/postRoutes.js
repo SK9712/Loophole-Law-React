@@ -6,7 +6,9 @@ const {
   getPosts,
   getPost,
   updatePost,
-  deletePost
+  deletePost,
+  getPostsByCategory,
+  getPostsByTag
 } = require('../controllers/postController');
 
 router.route('/')
@@ -17,5 +19,8 @@ router.route('/:slug')
   .get(getPost)
   .put(protect, authorize('admin', 'author'), updatePost)
   .delete(protect, authorize('admin', 'author'), deletePost);
+
+router.get('/category/:slug', getPostsByCategory);
+router.get('/tag/:tag', getPostsByTag);
 
 module.exports = router;

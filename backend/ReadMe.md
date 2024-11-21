@@ -42,3 +42,31 @@ curl -X PUT http://localhost:5000/api/posts/first-blog-post \
 -d '{
   "content": "Updated content"
 }'
+
+Iteration-3
+===========
+# Create category
+curl -X POST http://localhost:5000/api/categories \
+-H "Authorization: Bearer YOUR_TOKEN" \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "Technology",
+  "description": "Tech related posts"
+}'
+
+# Create post with category and tags
+curl -X POST http://localhost:5000/api/posts \
+-H "Authorization: Bearer YOUR_TOKEN" \
+-H "Content-Type: application/json" \
+-d '{
+  "title": "Post with Categories",
+  "content": "Content here",
+  "categories": ["category_id"],
+  "tags": ["tech", "programming"]
+}'
+
+# Get posts by category
+curl http://localhost:5000/api/posts/category/technology
+
+# Get posts by tag
+curl http://localhost:5000/api/posts/tag/tech

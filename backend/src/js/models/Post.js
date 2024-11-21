@@ -30,6 +30,14 @@ const postSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  categories: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
+  }],
+  tags: [{
+    type: String,
+    trim: true
+  }],
   publishedAt: Date,
   readTime: Number
 }, {

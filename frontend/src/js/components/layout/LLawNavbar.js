@@ -79,8 +79,6 @@ const LLawNavbar = () => {
       href: '/resources',
       subItems: [
         { text: 'Blog', href: '/resources/blog' },
-        { text: 'Case Studies', href: '/resources/cases' },
-        { text: 'Publications', href: '/resources/publications' },
         { text: 'FAQs', href: '/resources/faqs' }
       ]
     },

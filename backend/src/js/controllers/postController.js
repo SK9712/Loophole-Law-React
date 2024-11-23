@@ -213,3 +213,207 @@ exports.getPostsByTag = async (req, res) => {
     });
   }
 };
+
+// Record view count
+exports.recordView = async (req, res) => {
+  try {
+    const post = await Post.findOneAndUpdate(
+      { slug: req.params.slug },
+      { $inc: { viewCount: 1 } },
+      { new: true }
+    );
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: { viewCount: post.viewCount }
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// Toggle like
+exports.toggleLike = async (req, res) => {
+  try {
+    const post = await Post.findOne({ slug: req.params.slug });
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    const liked = post.likes.includes(req.user._id);
+
+    if (liked) {
+      // Unlike
+      post.likes = post.likes.filter(
+        id => id.toString() !== req.user._id.toString()
+      );
+    } else {
+      // Like
+      post.likes.push(req.user._id);
+    }
+
+    await post.save();
+
+    res.json({
+      success: true,
+      data: {
+        liked: !liked,
+        likeCount: post.likes.length
+      }
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// Advanced search
+exports.searchPosts = async (req, res) => {
+  try {
+    const { 
+      q,                  // search query
+      category,          // category filter
+      tags,             // tags filter
+      author,           // author filter
+      sortBy,           // sort field
+      order = 'desc',   // sort order
+      page = 1,
+      limit = 10
+    } = req.query;
+
+    const query = {};
+
+    // Text search
+    if (q) {
+      query.$text = { $search: q };
+    }
+
+    // Filters
+    if (category) {
+      query.categories = category;
+    }
+
+    if (tags) {
+      query.tags = { $in: tags.split(',') };
+    }
+
+    if (author) {
+      query.author = author;
+    }
+
+    // Only published posts
+    query.status = 'published';
+
+    // Sort options
+    const sortOptions = {};
+    if (q) {
+      sortOptions.score = { $meta: 'textScore' };
+    }
+    if (sortBy) {
+      sortOptions[sortBy] = order === 'desc' ? -1 : 1;
+    } else {
+      sortOptions.createdAt = -1;
+    }
+
+    const posts = await Post.find(query)
+      .select(q ? { score: { $meta: 'textScore' } } : '')
+      .populate('author', 'name')
+      .populate('categories', 'name')
+      .sort(sortOptions)
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
+
+    const total = await Post.countDocuments(query);
+
+    res.json({
+      success: true,
+      data: posts,
+      pagination: {
+        total,
+        page: parseInt(page),
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// Get popular posts
+exports.getPopularPosts = async (req, res) => {
+  try {
+    const { limit = 5 } = req.query;
+
+    const posts = await Post.find({ status: 'published' })
+      .sort({ viewCount: -1, likes: -1 })
+      .limit(parseInt(limit))
+      .populate('author', 'name')
+      .populate('categories', 'name');
+
+    res.json({
+      success: true,
+      data: posts
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// Related posts
+exports.getRelatedPosts = async (req, res) => {
+  try {
+    const post = await Post.findOne({ slug: req.params.slug });
+    
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    const relatedPosts = await Post.find({
+      _id: { $ne: post._id },
+      status: 'published',
+      $or: [
+        { categories: { $in: post.categories } },
+        { tags: { $in: post.tags } }
+      ]
+    })
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .populate('author', 'name')
+    .populate('categories', 'name');
+
+    res.json({
+      success: true,
+      data: relatedPosts
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

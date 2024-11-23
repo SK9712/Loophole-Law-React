@@ -39,9 +39,46 @@ const postSchema = new mongoose.Schema({
     trim: true
   }],
   publishedAt: Date,
-  readTime: Number
+readTime: Number,
+metaTitle: {
+    type: String,
+    maxLength: [60, 'Meta title should not exceed 60 characters']
+  },
+  metaDescription: {
+    type: String,
+    maxLength: [160, 'Meta description should not exceed 160 characters']
+  },
+  keywords: [{
+    type: String,
+    trim: true
+  }],
+  canonicalUrl: String,
+  
+  // Analytics fields
+  viewCount: {
+    type: Number,
+    default: 0
+  },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  readTime: Number,
+  isPopular: {
+    type: Boolean,
+    default: false
+  },
+  
+  // Enhanced content fields
+  excerpt: {
+    type: String,
+    maxLength: [300, 'Excerpt should not exceed 300 characters']
+  },
+  searchContent: String // For full-text search
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
 // Generate slug before saving
@@ -54,8 +91,35 @@ postSchema.pre('save', function(next) {
     const wordsPerMinute = 200;
     const wordCount = this.content.split(/\s+/).length;
     this.readTime = Math.ceil(wordCount / wordsPerMinute);
+    
+    // Create searchable content
+    this.searchContent = `${this.title} ${this.content} ${this.keywords.join(' ')}`.toLowerCase();
   }
   next();
+});
+
+// Create text index for search
+postSchema.index({ 
+  title: 'text',
+  content: 'text',
+  searchContent: 'text',
+  keywords: 'text'
+});
+
+postSchema.index({ 
+  title: 'text', 
+  content: 'text',
+  searchContent: 'text',  // Include searchContent field
+  keywords: 'text'
+},
+{
+  weights: {
+    title: 10,          // Title matches are most important
+    content: 5,         // Content matches are next
+    searchContent: 3,    // SearchContent matches have lower priority
+    keywords: 2
+  },
+  name: "PostTextIndex" // Give the index a name
 });
 
 module.exports = mongoose.model('Post', postSchema);

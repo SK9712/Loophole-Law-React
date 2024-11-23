@@ -128,3 +128,21 @@ curl http://localhost:5000/api/media/media_id \
 # Delete media
 curl -X DELETE http://localhost:5000/api/media/media_id \
 -H "Authorization: Bearer YOUR_TOKEN"
+
+Iteration-6
+===========
+# Search posts
+curl "http://localhost:5000/api/posts/search?q=law&category=legal&tags=corporate,legal&sortBy=viewCount"
+
+# Get popular posts
+curl http://localhost:5000/api/posts/popular
+
+# Get related posts
+curl http://localhost:5000/api/posts/your-post-slug/related
+
+# Record view
+curl -X POST http://localhost:5000/api/posts/your-post-slug/view
+
+# Toggle like
+curl -X POST http://localhost:5000/api/posts/your-post-slug/like \
+-H "Authorization: Bearer YOUR_TOKEN"

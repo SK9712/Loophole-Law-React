@@ -16,6 +16,7 @@ import LLAboutPage from './components/pages/about/LLAboutPage';
 import LLMissionValuesPage from './components/pages/about/LLMissionValuesPage';
 import LLStoryPage from './components/pages/about/LLStoryPage';
 
+import LLBlogPage from './components/pages/resources/LLBlogPage';
 import LLFAQPage from './components/pages/resources/LLFAQPage';
 
 import LLTeamPage from './components/pages/team/LLTeamPage';
@@ -73,6 +74,8 @@ function LLawApp() {
           <Route path="/" element={<LLandingPage />} />
           <Route path="/about" element={<LLAboutPage />} />
           <Route path="/contact" element={<LLContactPage />} />
+
+          <Route path="/resources/blog" element={<LLBlogPage />} />
           <Route path="/resources/faqs" element={<LLFAQPage />} />
 
           <Route path="/about/mission" element={<LLMissionValuesPage />} />

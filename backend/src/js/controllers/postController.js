@@ -284,6 +284,7 @@ exports.toggleLike = async (req, res) => {
 };
 
 // Advanced search
+// Advanced search with partial matching
 exports.searchPosts = async (req, res) => {
   try {
     const { 
@@ -298,10 +299,16 @@ exports.searchPosts = async (req, res) => {
     } = req.query;
 
     const query = {};
-
-    // Text search
+    
+    // Partial text search using regex
     if (q) {
-      query.$text = { $search: q };
+      const searchRegex = new RegExp(q, 'i');  // 'i' flag for case-insensitive
+      query.$or = [
+        { title: searchRegex },
+        { content: searchRegex },
+        { tags: searchRegex },
+        { searchContent: searchRegex }
+      ];
     }
 
     // Filters
@@ -310,7 +317,7 @@ exports.searchPosts = async (req, res) => {
     }
 
     if (tags) {
-      query.tags = { $in: tags.split(',') };
+      query.tags = { $in: tags.split(',').map(tag => new RegExp(tag, 'i')) };
     }
 
     if (author) {
@@ -322,9 +329,6 @@ exports.searchPosts = async (req, res) => {
 
     // Sort options
     const sortOptions = {};
-    if (q) {
-      sortOptions.score = { $meta: 'textScore' };
-    }
     if (sortBy) {
       sortOptions[sortBy] = order === 'desc' ? -1 : 1;
     } else {
@@ -332,7 +336,6 @@ exports.searchPosts = async (req, res) => {
     }
 
     const posts = await Post.find(query)
-      .select(q ? { score: { $meta: 'textScore' } } : '')
       .populate('author', 'name')
       .populate('categories', 'name')
       .sort(sortOptions)

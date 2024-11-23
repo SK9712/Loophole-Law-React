@@ -24,6 +24,14 @@ app.use('/api/categories', require('./routes/categoryRoutes'));
 
 app.use('/api/categories', require('./routes/categoryRoutes'));
 
+app.use('/api', require('./routes/commentRoutes'));
+
+// Add static file serving for uploads
+app.use('/uploads', express.static('../public/uploads'));
+
+// Add media routes
+app.use('/api/media', require('./routes/mediaRoutes'));
+
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);

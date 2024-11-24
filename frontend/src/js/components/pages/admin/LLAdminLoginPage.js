@@ -20,44 +20,63 @@ const LLAdminLoginPage = () => {
     setError(''); // Clear error when user types
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError('');
 
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-        credentials: 'include' // This enables sending cookies
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Invalid credentials');
-      }
-
-      // Store the token
-      localStorage.setItem('token', data.token);
-      
-      // Store user data
-      if (data.user) {
-        localStorage.setItem('user', JSON.stringify(data.user));
-      }
-
-      // Redirect to admin dashboard
-      navigate('/admin/dashboard');
-
-    } catch (err) {
-      setError(err.message || 'Failed to login. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+  // API configuration
+  const API_URL = 'http://localhost:5000/api/auth/login';
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+    credentials: 'include'
   };
+
+  try {
+    // Make API request
+    const response = await fetch(API_URL, requestOptions);
+    const result = await response.json();
+
+    // Handle error responses
+    if (!response.ok) {
+      throw new Error(result.message || 'Authentication failed');
+    }
+
+    // Validate response data
+    if (!result.data || !result.data.token) {
+      throw new Error('Invalid response from server');
+    }
+
+    // Store authentication data
+    const { token, name, role } = result.data;
+
+    // Set localStorage items
+    const storageItems = {
+      token,
+      user: name,
+      role
+    };
+
+    Object.entries(storageItems).forEach(([key, value]) => {
+      if (value) {
+        localStorage.setItem(key, typeof value === 'object' ? JSON.stringify(value) : value);
+      }
+    });
+
+    // Redirect to dashboard
+    window.location.href = '/admin/dashboard';
+
+  } catch (err) {
+    setError(err.message || 'Login failed. Please try again.');
+    console.error('Login error:', err);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-black flex items-center justify-center px-4">

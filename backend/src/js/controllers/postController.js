@@ -156,7 +156,7 @@ exports.deletePost = async (req, res) => {
       });
     }
 
-    await post.remove();
+    await Post.deleteOne({ _id: post._id });
 
     res.json({
       success: true,

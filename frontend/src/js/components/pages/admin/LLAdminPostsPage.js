@@ -146,7 +146,8 @@ const LLAdminPostsPage = () => {
       }
 
       const data = await response.json();
-      setPosts(Array.isArray(data) ? data : data.posts || []);
+
+      setPosts(Array.isArray(data.data) ? data.data : data.posts || []);
     } catch (err) {
       setError(err.message);
       setPosts([]);
@@ -276,7 +277,7 @@ const LLAdminPostsPage = () => {
       }
 
       const data = await response.json();
-      setPosts(Array.isArray(data) ? data : data.posts || []);
+      setPosts(Array.isArray(data.data) ? data.data : data.posts || []);
     } catch (err) {
       setError(err.message);
       setPosts([]);

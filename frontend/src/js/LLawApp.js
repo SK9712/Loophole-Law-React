@@ -1,6 +1,6 @@
 import '../css/LLawApp.css';
 import React, { useState, useEffect}  from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Navigate  } from 'react-router-dom';
 
 // Import components using relative paths
 import LLawFooter from './components/layout/LLawFooter';
@@ -34,7 +34,18 @@ import LLitigationLawPage from './components/pages/practice-areas/LLitigationLaw
 import LLRealEstateLawPage from './components/pages/practice-areas/LLRealEstateLawPage';
 import LLTaxLawPage from './components/pages/practice-areas/LLTaxLawPage';
 
+import LLAdminLoginPage from './components/pages/admin/LLAdminLoginPage';
+import LLAdminDashboardPage from './components/pages/admin/LLAdminDashboardPage';
+
 import { Routes, Route } from 'react-router-dom';
+
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return <Navigate to="/admin" replace />;
+  }
+  return children;
+};
 
 function LLawApp() {
  const [isLoading, setIsLoading] = useState(true);
@@ -96,6 +107,9 @@ function LLawApp() {
           <Route path="/practice-areas/litigation-law" element={<LLitigationLawPage />} />
           <Route path="/practice-areas/real-estate-law" element={<LLRealEstateLawPage />} />
           <Route path="/practice-areas/tax-law" element={<LLTaxLawPage />} />
+
+          <Route path="/admin" element={<LLAdminLoginPage />} />
+          <Route path="/admin/dashboard" element={<ProtectedRoute><LLAdminDashboardPage /></ProtectedRoute>} />
 
           <Route path="*" element={<LLNotFoundPage />} /> 
         </Routes>

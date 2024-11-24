@@ -155,20 +155,20 @@ export default function LLBlogPage() {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
 
-  const fetchPosts = async () => {
-    try {
-      const response = await fetch(`${API_URL}/posts`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await response.json();
-      setPosts(data.data || []);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-      setPosts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchPosts = async () => {
+  try {
+    const response = await fetch(`${API_URL}/posts?status=published`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await response.json();
+    setPosts(data.data || []);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    setPosts([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleSearch = (e) => {
     const term = e.target.value;

@@ -180,9 +180,9 @@ exports.getPostsByCategory = async (req, res) => {
       });
     }
 
-    const posts = await Post.find({ categories: category._id })
+    const posts = await Post.find({ category: category._id })
       .populate('author', 'name')
-      .populate('categories', 'name slug');
+      .populate('category', 'name slug');
 
     res.json({
       success: true,
@@ -200,7 +200,7 @@ exports.getPostsByTag = async (req, res) => {
   try {
     const posts = await Post.find({ tags: req.params.tag })
       .populate('author', 'name')
-      .populate('categories', 'name slug');
+      .populate('category', 'name slug');
 
     res.json({
       success: true,
@@ -289,6 +289,7 @@ exports.searchPosts = async (req, res) => {
   try {
     const { 
       q,                  // search query
+      status,
       category,          // category filter
       tags,             // tags filter
       author,           // author filter
@@ -313,19 +314,32 @@ exports.searchPosts = async (req, res) => {
 
     // Filters
     if (category) {
-      query.categories = category;
+        // Handle single or multiple categories
+        query.category = { 
+        $in: category.includes(',') ? category.split(',') : [category] 
+        };
     }
 
     if (tags) {
-      query.tags = { $in: tags.split(',').map(tag => new RegExp(tag, 'i')) };
+        // Handle tags with case-insensitive regex
+        query.tags = { 
+        $in: tags.split(',').map(tag => new RegExp(tag.trim(), 'i')) 
+        };
     }
 
     if (author) {
-      query.author = author;
+        // Handle single or multiple authors
+        query.author = { 
+        $in: author.includes(',') ? author.split(',') : [author] 
+        };
     }
 
-    // Only published posts
-    query.status = 'published';
+    if (status) {
+        // Handle single or multiple status values
+        query.status = { 
+        $in: status.includes(',') ? status.split(',') : [status] 
+        };
+    }
 
     // Sort options
     const sortOptions = {};
@@ -337,7 +351,7 @@ exports.searchPosts = async (req, res) => {
 
     const posts = await Post.find(query)
       .populate('author', 'name')
-      .populate('categories', 'name')
+      .populate('category', 'name')
       .sort(sortOptions)
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
@@ -370,7 +384,7 @@ exports.getPopularPosts = async (req, res) => {
       .sort({ viewCount: -1, likes: -1 })
       .limit(parseInt(limit))
       .populate('author', 'name')
-      .populate('categories', 'name');
+      .populate('category', 'name');
 
     res.json({
       success: true,
@@ -400,14 +414,14 @@ exports.getRelatedPosts = async (req, res) => {
       _id: { $ne: post._id },
       status: 'published',
       $or: [
-        { categories: { $in: post.categories } },
+        { category: post.category },
         { tags: { $in: post.tags } }
       ]
     })
     .sort({ createdAt: -1 })
     .limit(3)
     .populate('author', 'name')
-    .populate('categories', 'name');
+    .populate('category', 'name');
 
     res.json({
       success: true,

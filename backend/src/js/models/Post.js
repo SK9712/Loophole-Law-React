@@ -30,10 +30,10 @@ const postSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  categories: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category'
-  }],
+  category: {
+    type: String,
+    default: 'Legal',
+  },
   tags: [{
     type: String,
     trim: true

@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from 'react';
+
+import LLCreatePostModal from './modal/LLCreatePostModal';
+import LLViewPostModal from './modal/LLViewPostModal';
+import LLEditPostModal from './modal/LLEditPostModal';
+
+import LLFilterDropdown from './LLFilterDropdown';
+
 import {
   Plus,
   Search,
@@ -14,6 +21,7 @@ import {
   XCircle,
   AlertCircle
 } from 'lucide-react';
+
 
 const PostsTable = ({ posts = [], onEdit, onDelete, onView }) => {
   if (!Array.isArray(posts)) {
@@ -42,7 +50,7 @@ const PostsTable = ({ posts = [], onEdit, onDelete, onView }) => {
                   </div>
                   <div>
                     <p className="text-white font-medium">{post.title}</p>
-                    <p className="text-sm text-gray-400">{post.content?.substring(0, 100) || 'No content'}</p>
+                    <p className="text-sm text-gray-400">{post.content?.substring(0, 25) + "..." || 'No content'}</p>
                   </div>
                 </div>
               </td>
@@ -108,6 +116,83 @@ const LLAdminPostsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [activeFilters, setActiveFilters] = useState({
+                                            status: [],
+                                            category: [],
+                                            date: 'all'
+                                          });
+
+  const handleFilterChange = async (filters) => {
+    setActiveFilters(filters);
+  
+    try {
+        const headers = getAuthHeader();
+        if (!headers) return;
+
+        // Build query string from filters
+        const queryParams = new URLSearchParams();
+    
+        if (filters.status.length) {
+        queryParams.append('status', filters.status.join(','));
+        }
+        if (filters.category.length) {
+        queryParams.append('category', filters.category.join(','));
+        }
+        if (filters.date !== 'all') {
+        queryParams.append('dateRange', filters.date);
+        }
+        if (searchTerm) {
+        queryParams.append('q', searchTerm);
+        }
+
+        const response = await fetch(`http://localhost:5000/api/posts/search?${queryParams.toString()}`, {
+        headers
+        });
+
+        if (response.status === 401) {
+        handleAuthError();
+        return;
+        }
+
+        if (!response.ok) {
+        throw new Error('Failed to fetch filtered posts');
+        }
+
+        const data = await response.json();
+        setPosts(Array.isArray(data.data) ? data.data : []);
+    } catch (err) {
+        setError(err.message);
+        setPosts([]);
+        }
+    };
+
+  const handleCreateSuccess = (newPost) => {
+    setPosts(prevPosts => [newPost, ...prevPosts]);
+    setIsCreateModalOpen(false);
+  };
+
+  const handleView = (post) => {
+    setSelectedPost(post);
+    setIsViewModalOpen(true);
+  };
+
+  const handleEdit = (post) => {
+    setSelectedPost(post);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateSuccess = (updatedPost) => {
+     // Update your posts list with the updated post
+     setPosts(prevPosts => 
+        prevPosts.map(p => p._id === updatedPost._id ? updatedPost : p)
+      );
+    setIsEditModalOpen(false);
+    setSelectedPost(null);
+  };
 
   const getAuthHeader = () => {
     const token = localStorage.getItem('token');
@@ -220,36 +305,6 @@ const LLAdminPostsPage = () => {
     }
   };
 
-  const handleEdit = async (post) => {
-    try {
-      const headers = getAuthHeader();
-      if (!headers) return;
-
-      const response = await fetch(`http://localhost:5000/api/posts/${post.slug || post._id}`, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify({
-          title: post.title,
-          content: post.content,
-          status: post.status
-        })
-      });
-
-      if (response.status === 401) {
-        handleAuthError();
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error('Failed to update post');
-      }
-
-      await fetchPosts();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
   const handleSearch = async (e) => {
     const term = e.target.value;
     setSearchTerm(term);
@@ -301,13 +356,19 @@ const LLAdminPostsPage = () => {
             <h1 className="text-2xl font-bold text-white">Posts</h1>
             <p className="text-gray-400">Manage your blog posts and articles</p>
           </div>
-          <button 
-            onClick={handleCreatePost}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-            New Post
-          </button>
+
+             <button 
+        onClick={() => setIsCreateModalOpen(true)}
+        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+      >
+        <Plus className="w-5 h-5" />
+        New Post
+      </button>
+            <LLCreatePostModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreate={handleCreateSuccess}
+      />
         </div>
       </div>
 
@@ -331,10 +392,7 @@ const LLAdminPostsPage = () => {
           />
         </div>
         <div className="flex gap-4">
-          <button className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 text-gray-300 rounded-lg border border-slate-700 transition-colors">
-            <Filter className="w-5 h-5" />
-            Filter
-          </button>
+          <LLFilterDropdown onFilterChange={handleFilterChange} />
           <button className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 text-gray-300 rounded-lg border border-slate-700 transition-colors">
             <MoreVertical className="w-5 h-5" />
             More
@@ -346,9 +404,28 @@ const LLAdminPostsPage = () => {
       <div className="bg-slate-800/50 border border-slate-700 rounded-xl">
         <PostsTable
           posts={posts}
-          onView={(post) => console.log('View:', post)}
+          onView={handleView}
           onEdit={handleEdit}
           onDelete={handleDelete}
+        />
+
+        <LLViewPostModal 
+            isOpen={isViewModalOpen}
+            onClose={() => {
+            setIsViewModalOpen(false);
+            setSelectedPost(null);
+            }}
+            post={selectedPost}
+        />
+        
+        <LLEditPostModal
+            isOpen={isEditModalOpen}
+            onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedPost(null);
+            }}
+            post={selectedPost}
+            onUpdate={handleUpdateSuccess}
         />
       </div>
     </div>

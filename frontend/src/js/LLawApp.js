@@ -35,7 +35,7 @@ import LLRealEstateLawPage from './components/pages/practice-areas/LLRealEstateL
 import LLTaxLawPage from './components/pages/practice-areas/LLTaxLawPage';
 
 import LLAdminLoginPage from './components/pages/admin/LLAdminLoginPage';
-import LLAdminDashboardPage from './components/pages/admin/LLAdminDashboardPage';
+import LLAdminContainer from './components/pages/admin/LLAdminContainer';
 
 import { Routes, Route } from 'react-router-dom';
 
@@ -109,7 +109,7 @@ function LLawApp() {
           <Route path="/practice-areas/tax-law" element={<LLTaxLawPage />} />
 
           <Route path="/admin" element={<LLAdminLoginPage />} />
-          <Route path="/admin/dashboard" element={<ProtectedRoute><LLAdminDashboardPage /></ProtectedRoute>} />
+          <Route path="/admin/dashboard" element={<ProtectedRoute><LLAdminContainer /></ProtectedRoute>} />
 
           <Route path="*" element={<LLNotFoundPage />} /> 
         </Routes>

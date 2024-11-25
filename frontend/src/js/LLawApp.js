@@ -10,6 +10,8 @@ import LLoaderScreen from './components/LLoaderScreen';
 
 import LLContactPage from './components/pages/LLContactPage';
 import LLandingPage from './components/pages/LLandingPage';
+import LLWhyUsPage from './components/pages/LLWhyUsPage';
+import LLServicesPage from './components/pages/LLServicesPage';
 import LLNotFoundPage from './components/pages/LLNotFoundPage';
 
 import LLAboutPage from './components/pages/about/LLAboutPage';
@@ -36,6 +38,8 @@ import LLTaxLawPage from './components/pages/practice-areas/LLTaxLawPage';
 
 import LLAdminLoginPage from './components/pages/admin/LLAdminLoginPage';
 import LLAdminContainer from './components/pages/admin/LLAdminContainer';
+
+import LLAppointmentPage from './components/pages/consultation/LLAppointmentPage';
 
 import { Routes, Route } from 'react-router-dom';
 
@@ -84,13 +88,15 @@ function LLawApp() {
       <main className="flex-1 mt-24">
         <Routes>
           <Route path="/" element={<LLandingPage />} />
-          <Route path="/about" element={<LLAboutPage />} />
           <Route path="/contact" element={<LLContactPage />} />
+          <Route path="/why-us" element={<LLWhyUsPage />} />
+          <Route path="/services" element={<LLServicesPage />} />
 
           <Route path="/resources" element={<LLResourcesPage />} />
           <Route path="/resources/blog" element={<LLBlogPage />} />
           <Route path="/resources/faqs" element={<LLFAQPage />} />
 
+          <Route path="/about" element={<LLAboutPage />} />
           <Route path="/about/mission" element={<LLMissionValuesPage />} />
           <Route path="/about/story" element={<LLStoryPage />} />
 
@@ -110,6 +116,8 @@ function LLawApp() {
 
           <Route path="/admin" element={<LLAdminLoginPage />} />
           <Route path="/admin/dashboard" element={<ProtectedRoute><LLAdminContainer /></ProtectedRoute>} />
+
+          <Route path="/consultation" element={<LLAppointmentPage />} />
 
           <Route path="*" element={<LLNotFoundPage />} /> 
         </Routes>

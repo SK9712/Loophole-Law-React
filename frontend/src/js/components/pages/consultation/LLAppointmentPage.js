@@ -24,6 +24,7 @@ const LLAppointmentPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [showValidation, setShowValidation] = useState(false);
 
   const steps = ['Service', 'Schedule', 'Details', 'Review'];
   const services = [
@@ -59,23 +60,34 @@ const LLAppointmentPage = () => {
 
   const handleBack = () => {
     setCurrentStep(prev => Math.max(0, prev - 1));
+    setShowValidation(false); // Reset validation when going back
   };
 
   const handleContinue = () => {
-    // Validate current step before proceeding
     if (validateCurrentStep()) {
       setCurrentStep(prev => Math.min(steps.length - 1, prev + 1));
+      setShowValidation(false); // Reset validation on successful step change
     }
   };
 
-  const validateCurrentStep = () => {
+   const validateCurrentStep = () => {
+    setShowValidation(true);
+    
     switch (currentStep) {
       case 0:
         return !!formData.service;
       case 1:
         return !!formData.date && !!formData.time;
       case 2:
-        return !!formData.name && !!formData.email && !!formData.phone;
+        return (
+          !!formData.name.trim() &&
+          !!formData.email.trim() &&
+          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
+          !!formData.phone.trim() &&
+          /^[\d\s()-]+$/.test(formData.phone) &&
+          formData.phone.replace(/\D/g, '').length >= 10 &&
+          !!formData.message.trim()
+        );
       default:
         return true;
     }
@@ -104,24 +116,33 @@ const LLAppointmentPage = () => {
     }
   };
 
-  const renderCurrentStep = () => {
+   const renderCurrentStep = () => {
     switch (currentStep) {
       case 0:
-        return <LLServiceStep 
-          services={services} 
-          onServiceSelect={handleServiceSelect} 
-        />;
+        return (
+          <LLServiceStep 
+            services={services} 
+            onServiceSelect={handleServiceSelect}
+            showValidation={showValidation && !formData.service} 
+          />
+        );
       case 1:
-        return <LLScheduleStep 
-          formData={formData}
-          onDateChange={handleDateChange}
-          onTimeSelect={handleTimeSelect}
-        />;
+        return (
+          <LLScheduleStep 
+            formData={formData}
+            onDateChange={handleDateChange}
+            onTimeSelect={handleTimeSelect}
+            showValidation={showValidation}
+          />
+        );
       case 2:
-        return <LLDetailsStep 
-          formData={formData}
-          onFormChange={handleFormChange}
-        />;
+        return (
+          <LLDetailsStep 
+            formData={formData}
+            onFormChange={handleFormChange}
+            showValidation={showValidation}
+          />
+        );
       case 3:
         return <LLReviewStep formData={formData} />;
       default:

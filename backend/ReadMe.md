@@ -146,3 +146,27 @@ curl -X POST http://localhost:5000/api/posts/your-post-slug/view
 # Toggle like
 curl -X POST http://localhost:5000/api/posts/your-post-slug/like \
 -H "Authorization: Bearer YOUR_TOKEN"
+
+
+Appointment Iterations
+======================
+Iteration-1
+===========
+Create a new appointment:
+curl -X POST http://localhost:5000/api/appointments \
+-H "Content-Type: application/json" \
+-d '{
+  "service": "Corporate Law",
+  "date": "2024-12-01",
+  "time": "09:00 AM",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "123-456-7890",
+  "message": "Initial consultation for business formation"
+}'
+
+Get all appointments:
+curl http://localhost:5000/api/appointments
+
+Get a specific appointment:
+curl http://localhost:5000/api/appointments/:id

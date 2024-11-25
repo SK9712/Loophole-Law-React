@@ -1,20 +1,89 @@
 const Post = require('../models/Post');
 const Category = require('../models/Category');
+const path = require('path');
+const fs = require('fs').promises;
+
+// Helper function to decode and save base64 image
+const saveBase64Image = async (base64String, title) => {
+  try {
+    // Extract image data and type from base64 string
+    const matches = base64String.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    
+    if (!matches || matches.length !== 3) {
+      throw new Error('Invalid base64 string');
+    }
+
+    const mimeType = matches[1];
+    const imageBuffer = Buffer.from(matches[2], 'base64');
+    
+    // Get file extension from mime type
+    const extension = mimeType.split('/')[1];
+    const fileName = `post-${Date.now()}-${Math.round(Math.random() * 1E9)}.${extension}`;
+    const uploadDir = 'public/uploads/posts';
+    const filePath = path.join(uploadDir, fileName);
+
+    // Create directory if it doesn't exist
+    try {
+      await fs.access(uploadDir);
+    } catch {
+      await fs.mkdir(uploadDir, { recursive: true });
+    }
+
+    // Save the file
+    await fs.writeFile(filePath, imageBuffer);
+
+    return {
+      fileName,
+      filePath: `/uploads/posts/${fileName}`,
+      fileType: mimeType,
+      fileSize: imageBuffer.length
+    };
+  } catch (error) {
+    throw new Error(`Failed to save image: ${error.message}`);
+  }
+};
 
 // Create post
+// Create post with base64 image
 exports.createPost = async (req, res) => {
   try {
-    const post = await Post.create({
-      ...req.body,
+    const { title, content, category, status, image } = req.body;
+    
+    const postData = {
+      title,
+      content,
+      category,
+      status,
       author: req.user._id,
-      publishedAt: req.body.status === 'published' ? new Date() : null
-    });
+      publishedAt: status === 'published' ? new Date() : null
+    };
+
+    // Handle image if provided
+    if (image) {
+      try {
+        const imageData = await saveBase64Image(image, title);
+        postData.featuredImage = imageData;
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: error.message
+        });
+      }
+    }
+
+    const post = await Post.create(postData);
 
     res.status(201).json({
       success: true,
       data: post
     });
   } catch (error) {
+    // Clean up uploaded image if post creation fails
+    if (postData?.featuredImage?.filePath) {
+      const fullPath = path.join('public', postData.featuredImage.filePath);
+      await fs.unlink(fullPath).catch(console.error);
+    }
+
     res.status(400).json({
       success: false,
       message: error.message
@@ -94,32 +163,55 @@ exports.getPost = async (req, res) => {
 // Update post
 exports.updatePost = async (req, res) => {
   try {
+    const { title, content, category, status, image } = req.body;
+    
     const post = await Post.findOne({ slug: req.params.slug });
 
     if (!post) {
-      return res.status(404).json({
-        success: false,
-        message: 'Post not found'
-      });
+      throw new Error('Post not found');
     }
 
-    // Check if user is author or admin
+    // Check authorization
     if (post.author.toString() !== req.user._id.toString() && 
         req.user.role !== 'admin') {
-      return res.status(403).json({
-        success: false,
-        message: 'Not authorized to update this post'
-      });
+      throw new Error('Not authorized to update this post');
     }
 
-    // Set publishedAt if status changes to published
-    if (req.body.status === 'published' && post.status === 'draft') {
-      req.body.publishedAt = new Date();
+    const updateData = {
+      title,
+      content,
+      category,
+      status
+    };
+
+    // Handle image update if provided
+    if (image) {
+      try {
+        // Delete old image if it exists
+        if (post.featuredImage && post.featuredImage.fileName) {
+          const oldImagePath = path.join('public/uploads/posts', post.featuredImage.fileName);
+          await fs.unlink(oldImagePath).catch(console.error);
+        }
+
+        // Save new image
+        const imageData = await saveBase64Image(image, title);
+        updateData.featuredImage = imageData;
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: error.message
+        });
+      }
+    }
+
+    // Update publishedAt if status changes to published
+    if (updateData.status === 'published' && post.status === 'draft') {
+      updateData.publishedAt = new Date();
     }
 
     const updatedPost = await Post.findOneAndUpdate(
       { slug: req.params.slug },
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     );
 
@@ -141,19 +233,19 @@ exports.deletePost = async (req, res) => {
     const post = await Post.findOne({ slug: req.params.slug });
 
     if (!post) {
-      return res.status(404).json({
-        success: false,
-        message: 'Post not found'
-      });
+      throw new Error('Post not found');
     }
 
-    // Check if user is author or admin
+    // Check authorization
     if (post.author.toString() !== req.user._id.toString() && 
         req.user.role !== 'admin') {
-      return res.status(403).json({
-        success: false,
-        message: 'Not authorized to delete this post'
-      });
+      throw new Error('Not authorized to delete this post');
+    }
+
+    // Delete associated image if it exists
+    if (post.featuredImage && post.featuredImage.fileName) {
+      const imagePath = path.join('public/uploads/posts', post.featuredImage.fileName);
+      await fs.unlink(imagePath).catch(console.error);
     }
 
     await Post.deleteOne({ _id: post._id });

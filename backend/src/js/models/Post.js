@@ -16,6 +16,12 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Content is required']
   },
+  featuredImage: {
+    fileName: String,
+    filePath: String,
+    fileType: String,
+    fileSize: Number
+  },
   excerpt: {
     type: String,
     maxLength: [500, 'Excerpt cannot exceed 500 characters']

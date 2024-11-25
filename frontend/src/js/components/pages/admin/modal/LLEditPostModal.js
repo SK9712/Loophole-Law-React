@@ -7,7 +7,7 @@ const LLEditPostModal = ({ isOpen, onClose, post, onUpdate }) => {
     content: '',
     category: '',
     status: '',
-    image: ''
+    image: null
   });
   const [imagePreview, setImagePreview] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,10 +19,15 @@ const LLEditPostModal = ({ isOpen, onClose, post, onUpdate }) => {
         title: post.title || '',
         content: post.content || '',
         category: post.category || '',
-        status: post.status || 'draft',
-        image: post.image || ''
+        status: post.status || 'draft'
       });
-      setImagePreview(post.image || '');
+
+      // Set image preview if featuredImage exists
+      if (post.featuredImage?.filePath) {
+        setImagePreview(`http://localhost:5000${post.featuredImage.filePath}`);
+      } else {
+        setImagePreview('');
+      }
     }
   }, [post]);
 
@@ -48,6 +53,24 @@ const LLEditPostModal = ({ isOpen, onClose, post, onUpdate }) => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleRemoveImage = () => {
+    setImagePreview('');
+    setFormData(prev => ({
+      ...prev,
+      image: null
+    }));
+  };
+
+  const formatFileSize = (bytes) => {
+    if (!bytes) return '';
+    const kb = bytes / 1024;
+    if (kb < 1024) {
+      return `${Math.round(kb)} KB`;
+    }
+    const mb = kb / 1024;
+    return `${mb.toFixed(1)} MB`;
   };
 
   const handleSubmit = async (e) => {
@@ -185,17 +208,24 @@ const LLEditPostModal = ({ isOpen, onClose, post, onUpdate }) => {
                       />
                       <button
                         type="button"
-                        onClick={() => {
-                          setFormData(prev => ({ ...prev, image: '' }));
-                          setImagePreview('');
-                        }}
-                        className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                        onClick={handleRemoveImage}
+                        className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
                       >
                         <X className="w-4 h-4" />
                       </button>
+                      {!formData.image && post.featuredImage && (
+                        <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-xs">
+                          <div className="bg-black/50 backdrop-blur-sm px-2 py-1 rounded text-white">
+                            {formatFileSize(post.featuredImage.fileSize)}
+                          </div>
+                          <div className="bg-black/50 backdrop-blur-sm px-2 py-1 rounded text-white truncate max-w-[60%]">
+                            {post.featuredImage.fileName}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center h-48 cursor-pointer">
+                    <label className="flex flex-col items-center justify-center h-48 cursor-pointer hover:bg-slate-700/20 transition-colors rounded-lg">
                       <ImageIcon className="w-8 h-8 text-gray-400 mb-2" />
                       <span className="text-sm text-gray-400">Click to upload image</span>
                       <input

@@ -117,7 +117,7 @@ const LLAboutPage = () => {
               Contact us today to schedule a consultation with our expert legal team.
             </p>
             <a 
-              href="/contact" 
+              href="/consultation" 
               className="inline-block bg-green-500 hover:bg-green-600 text-white font-medium px-8 py-3 rounded-lg transition-colors"
             >
               Schedule Consultation

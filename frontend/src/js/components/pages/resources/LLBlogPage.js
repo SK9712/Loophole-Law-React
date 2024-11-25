@@ -20,7 +20,7 @@ function BlogDetailModal({ post, onClose, onLike }) {
         <div className="p-8">
           <div className="flex items-center gap-4 text-sm text-slate-400 mb-6">
             <span className="bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full border border-blue-500/20">
-              {post.categories?.[0]?.name || 'Uncategorized'}
+              {post.category || 'Uncategorized'}
             </span>
             <span className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
@@ -50,10 +50,10 @@ function BlogDetailModal({ post, onClose, onLike }) {
             </button>
           </div>
 
-          {post.featuredImage && (
+          {post.featuredImage?.filePath && (
             <div className="relative h-64 md:h-96 mb-8 rounded-xl overflow-hidden">
               <img
-                src={`${API_URL}${post.featuredImage}`}
+                src={`http://localhost:5000${post.featuredImage.filePath}`}
                 alt={post.title}
                 className="absolute inset-0 w-full h-full object-cover"
               />
@@ -93,12 +93,23 @@ function BlogPostCard({ post, onView, onLike }) {
       onClick={() => onView(post.slug)}
     >
       <div className="relative h-48 overflow-hidden">
-        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900/30 to-purple-900/30 group-hover:scale-105 transition-transform duration-300" />
+        {post.featuredImage?.filePath ? (
+          <>
+            <img
+              src={`http://localhost:5000${post.featuredImage.filePath}`}
+              alt={post.title}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/20 to-transparent" />
+          </>
+        ) : (
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900/30 to-purple-900/30 group-hover:scale-105 transition-transform duration-300" />
+        )}
       </div>
       <div className="p-6">
         <div className="flex items-center gap-4 text-sm text-slate-400 mb-4">
           <span className="bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full border border-blue-500/20">
-            {post.categories?.[0]?.name || 'Uncategorized'}
+            {post.category || 'Uncategorized'}
           </span>
           <span className="flex items-center gap-1 opacity-75">
             <Clock className="w-4 h-4" />

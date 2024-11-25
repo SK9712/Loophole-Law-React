@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/database');
+const path = require('path');
 
 // Load env vars
 dotenv.config();
@@ -36,7 +37,7 @@ app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api', require('./routes/commentRoutes'));
 
 // Add static file serving for uploads
-app.use('/uploads', express.static('../public/uploads'));
+app.use('/uploads', express.static(path.join(__dirname, '../../public/uploads')));
 
 // Add media routes
 app.use('/api/media', require('./routes/mediaRoutes'));

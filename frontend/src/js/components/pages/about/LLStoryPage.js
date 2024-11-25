@@ -185,7 +185,7 @@ const LLStoryPage = () => {
             Experience legal excellence with a firm that understands Kerala's unique needs.
           </p>
           <a 
-            href="/contact"
+            href="/consultation"
             className="inline-block px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors"
           >
             Schedule a Consultation

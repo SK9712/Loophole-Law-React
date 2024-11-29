@@ -40,6 +40,9 @@ app.use('/uploads', express.static(path.join(__dirname, '../../public/uploads'))
 // Add media routes
 app.use('/api/media', require('./routes/mediaRoutes'));
 
+// Add to server.js
+app.use('/api/appointments', require('./routes/appointmentRoutes'));
+
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);

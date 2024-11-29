@@ -7,14 +7,14 @@ import {
   MessageSquare,
   Settings,
   LogOut,
-  Bell,
-  Search,
   Menu,
   X,
-  Briefcase
+  Briefcase,
+  Calendar
 } from 'lucide-react';
 import LLAdminDashboardPage from './LLAdminDashboardPage';
 import LLAdminPostsPage from './LLAdminPostsPage';
+import { LLAdminAppointmentsView } from './appointments/LLAdminAppointmentsView';
 
 const LLAdminContainer = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -23,6 +23,7 @@ const LLAdminContainer = () => {
 
   const menuItems = [
     { icon: LayoutDashboard, text: 'Dashboard', id: 'dashboard' },
+    { icon: Calendar, text: 'Appointments', id: 'appointments' },
     { icon: FileText, text: 'Posts', id: 'posts' },
     { icon: Briefcase, text: 'Cases', id: 'cases' },
     { icon: Users, text: 'Clients', id: 'clients' },
@@ -45,7 +46,9 @@ const LLAdminContainer = () => {
   const renderPage = () => {
     switch (currentPage) {
       case 'dashboard':
-        return <LLAdminDashboardPage />;
+        return <LLAdminDashboardPage onNavigate={handleMenuClick} />;
+      case 'appointments':
+        return <LLAdminAppointmentsView />;
       case 'posts':
         return <LLAdminPostsPage />;
       default:
@@ -137,7 +140,6 @@ const LLAdminContainer = () => {
 
       {/* Main Content */}
       <div className={`transition-all duration-300 ease-in-out ${sidebarOpen ? 'md:ml-64' : 'md:ml-0'}`}>
-        {/* Render Current Page */}
         {renderPage()}
       </div>
     </div>

@@ -9,6 +9,7 @@ import { LLDetailsStep } from './LLDetailsStep';
 import { LLReviewStep } from './LLReviewStep';
 import { LLAppointmentHeader } from './LLAppointmentHeader';
 import { LLNavigationButtons } from './LLNavigationButtons';
+import LLErrorAlert from './LLErrorAlert';
 
 const LLAppointmentPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -25,6 +26,7 @@ const LLAppointmentPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
+  const [error, setError] = useState(null);
 
   const steps = ['Service', 'Schedule', 'Details', 'Review'];
   const services = [
@@ -93,24 +95,50 @@ const LLAppointmentPage = () => {
     }
   };
 
+// In LLAppointmentPage.js, update handleSubmit:
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setError(null);
+
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Here you would normally make an API call to save the appointment
-      // const response = await fetch('/api/appointments', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData)
-      // });
-      // const data = await response.json();
-      
+      // Format the data according to backend expectations
+      const formattedData = {
+        clientName: formData.name,
+        clientEmail: formData.email,
+        clientPhone: formData.phone,
+        service: formData.service,
+        appointmentDate: new Date(formData.date).toISOString(),
+        appointmentTime: formData.time,
+        message: formData.message,
+        isEmergency: formData.isEmergency
+      };
+
+      const response = await fetch('http://localhost:5000/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formattedData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle validation errors
+        if (response.status === 400 && data.error) {
+          throw new Error(Array.isArray(data.error) ? data.error.join(', ') : data.error);
+        }
+        throw new Error('Failed to schedule appointment. Please try again.');
+      }
+
       setIsSuccess(true);
+      // Optional: Scroll to top to show success message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
     } catch (error) {
-      console.error('Submission error:', error);
-      // Here you would normally handle the error and show it to the user
+      setError(error);
+      // Scroll error into view
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setIsSubmitting(false);
     }
@@ -156,7 +184,14 @@ const LLAppointmentPage = () => {
 
       <div className="max-w-6xl mx-auto px-4 pb-12">
         <LLProgressBar steps={steps} currentStep={currentStep} />
-
+            {error && (
+            <div className="max-w-2xl mx-auto">
+              <LLErrorAlert 
+                error={error} 
+                onDismiss={() => setError(null)}
+                />
+            </div>
+            )}
         {!isSuccess ? (
           <>
             {renderCurrentStep()}

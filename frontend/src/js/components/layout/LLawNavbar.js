@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Scale, ChevronDown } from 'lucide-react';
+import { Scale, ChevronDown, BookOpen } from 'lucide-react';
+import LLogo from '../LLogo';
 
 // Menu Icons as components using SVG
 const MenuIcon = () => (
@@ -137,14 +138,10 @@ const LLawNavbar = () => {
         {/* Logo Section */}
         <a 
           href="/" 
-          className='flex items-center gap-2 hover:opacity-90 transition-opacity'
+          className='hover:opacity-90 transition-opacity'
           onClick={(e) => handleLinkClick('/', e)}
         >
-          <Scale className="w-8 h-8 text-blue-400" />
-          <h1 className='text-2xl font-bold'>
-              <span className="text-blue-400">Loophole</span>
-              <span className="text-green-400">Law.</span>
-          </h1>
+          <LLogo />
         </a>
 
         {/* Desktop Navigation */}
@@ -217,10 +214,7 @@ const LLawNavbar = () => {
           `}>
             {/* Mobile Menu Header */}
             <div className='flex items-center justify-between mb-8'>
-              <div className='flex items-center gap-2'>
-                <Scale className="w-6 h-6 text-blue-400" />
-                <span className='text-xl font-bold text-green-400'>LoopHoleLaw.</span>
-              </div>
+              <LLogo />
               <button
                 onClick={() => setNav(false)}
                 className='p-2 hover:bg-green-400/10 rounded-lg transition-colors text-green-400'

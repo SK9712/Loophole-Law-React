@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Scale,
   LayoutDashboard,
   FileText,
   Users,
@@ -12,6 +11,7 @@ import {
   Briefcase,
   Calendar
 } from 'lucide-react';
+import LLogo from '../../LLogo';
 import LLAdminDashboardPage from './LLAdminDashboardPage';
 import LLAdminPostsPage from './LLAdminPostsPage';
 import { LLAdminAppointmentsView } from './appointments/LLAdminAppointmentsView';
@@ -65,12 +65,8 @@ const LLAdminContainer = () => {
       {/* Sidebar - Desktop */}
       <div className={`fixed top-0 left-0 h-full bg-slate-800/50 border-r border-slate-700 backdrop-blur-sm w-64 transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-64'} hidden md:block z-50`}>
         {/* Logo */}
-        <div className="flex items-center gap-2 px-6 py-5 border-b border-slate-700">
-          <Scale className="w-8 h-8 text-blue-400" />
-          <h1 className="text-xl font-bold">
-            <span className="text-blue-400">Loophole</span>
-            <span className="text-green-400">Law.</span>
-          </h1>
+        <div className="px-6 py-5 border-b border-slate-700">
+          <LLogo />
         </div>
 
         {/* Menu Items */}
@@ -113,6 +109,11 @@ const LLAdminContainer = () => {
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 md:hidden">
           <div className="fixed inset-y-0 right-0 w-64 bg-slate-800 p-6">
+            {/* Mobile Logo */}
+            <div className="mb-6">
+              <LLogo />
+            </div>
+            
             <nav className="space-y-2">
               {menuItems.map((item) => (
                 <button

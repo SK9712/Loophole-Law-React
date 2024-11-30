@@ -76,10 +76,13 @@ const LLWhyUsPage = () => {
   return (
     <article className="min-h-screen bg-gradient-to-b from-slate-900 to-black text-white">
       {/* Hero Section with Main Value Proposition */}
-      <section className="relative h-[50vh] flex items-center justify-center" aria-label="hero">
+      <section className="relative min-h-[50vh] flex items-center justify-center py-16" aria-label="hero">
         <div className="absolute inset-0 bg-green-400/10" />
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <Scale className="w-16 h-16 text-green-400 mx-auto mb-6" />
+          <div className="relative w-24 h-24 mx-auto mb-8">
+            <BookOpen className="w-24 h-24 text-blue-400 absolute" />
+            <Scale className="w-16 h-16 text-green-400 absolute bottom-0 right-0" />
+          </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Leading Legal Excellence in Corporate & Business Law
           </h1>
@@ -90,6 +93,7 @@ const LLWhyUsPage = () => {
         </div>
       </section>
 
+      {/* Rest of the sections remain unchanged ... */}
       {/* Expertise Section */}
       <section className="py-20 px-4" aria-label="expertise">
         <div className="max-w-6xl mx-auto">

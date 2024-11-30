@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scale } from 'lucide-react';
+import { Scale, BookOpen } from 'lucide-react';
 
 const LLoaderScreen = ({ isLoading = true }) => {
   if (!isLoading) return null;
@@ -50,7 +50,10 @@ const LLoaderScreen = ({ isLoading = true }) => {
 
       <div className="text-center space-y-6">
         {/* Logo Icon */}
-        <Scale className="w-12 h-12 text-blue-400 mx-auto fade-pulse" />
+        <div className="relative w-12 h-12 mx-auto fade-pulse">
+          <BookOpen className="w-12 h-12 text-blue-400 absolute" />
+          <Scale className="w-8 h-8 text-green-400 absolute bottom-0 right-0" />
+        </div>
 
         {/* Animated Lines */}
         <div className="flex justify-center items-center gap-1 h-8">
@@ -63,11 +66,13 @@ const LLoaderScreen = ({ isLoading = true }) => {
         </div>
 
         {/* Brand Name */}
-        <div className="fade-pulse">
-          <span className="text-xl font-medium">
+        <div className="fade-pulse flex flex-col leading-none">
+          <span className="text-xl font-bold">
             <span className="text-blue-400">Loophole</span>
             <span className="text-green-400">Law</span>
+            <span className="text-green-400">.</span>
           </span>
+          <span className="text-xs text-gray-400 tracking-widest">LEGAL EXCELLENCE</span>
         </div>
       </div>
     </div>

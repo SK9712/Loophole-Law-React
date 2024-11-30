@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scale } from 'lucide-react';
+import { Scale, BookOpen } from 'lucide-react';
 
 const Button = ({ children, className, size = "md", variant = "primary", href }) => {
   const sizeClasses = {
@@ -43,7 +43,11 @@ const LLandingPage = () => {
         <div className="absolute inset-0 bg-black/50" />
         
         <div className="relative z-10 text-center space-y-6 max-w-4xl">
-          <Scale className="mx-auto w-16 h-16 mb-8 text-blue-400" />
+          {/* Large Hero Logo */}
+          <div className="relative w-24 h-24 mx-auto mb-8">
+            <BookOpen className="w-24 h-24 text-blue-400 absolute" />
+            <Scale className="w-16 h-16 text-green-400 absolute bottom-0 right-0" />
+          </div>
           <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">
             LoopHoleLaw.
           </h1>

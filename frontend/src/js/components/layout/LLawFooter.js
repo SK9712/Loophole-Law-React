@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scale } from 'lucide-react';
+import LLogo from '../LLogo';
 
 function LLawFooter() {
     // Navigation Links
@@ -68,13 +68,9 @@ function LLawFooter() {
                 <div className="mt-16">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                         {/* Logo */}
-                        <div className="flex items-center gap-2">
-                            <Scale className="w-8 h-8 text-blue-400" />
-                            <span className="text-xl font-bold">
-                                    <span className="text-blue-400">Loophole</span>
-                                    <span className="text-green-400">Law.</span>
-                            </span>
-                        </div>
+                        <a href="/" className="hover:opacity-90 transition-opacity">
+                            <LLogo />
+                        </a>
 
                         {/* Navigation Links */}
                         <nav className="hidden md:flex gap-8">

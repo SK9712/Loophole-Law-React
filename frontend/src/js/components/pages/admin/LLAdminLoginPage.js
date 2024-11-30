@@ -1,83 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Scale, Lock, User, EyeOff, Eye, AlertCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 
 const LLAdminLoginPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+
+  // Check authentication status when component mounts
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('token');
+      const role = localStorage.getItem('role');
+      
+      if (role === 'admin') {
+        setIsAuthenticated(true);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  // If authenticated, redirect to dashboard
+  if (isAuthenticated) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-    setError(''); // Clear error when user types
+    setError('');
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
-  setError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
 
-  // API configuration
-  const API_URL = 'http://localhost:5000/api/auth/login';
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(formData),
-    credentials: 'include'
-  };
+    try {
+      // For testing purposes (remove in production)
+      // Simulating a successful login
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+        credentials: 'include'
+      });
 
-  try {
-    // Make API request
-    const response = await fetch(API_URL, requestOptions);
-    const result = await response.json();
+      const result = await response.json();
 
-    // Handle error responses
-    if (!response.ok) {
-      throw new Error(result.message || 'Authentication failed');
-    }
-
-    // Validate response data
-    if (!result.data || !result.data.token) {
-      throw new Error('Invalid response from server');
-    }
-
-    // Store authentication data
-    const { token, name, role } = result.data;
-
-    // Set localStorage items
-    const storageItems = {
-      token,
-      user: name,
-      role
-    };
-
-    Object.entries(storageItems).forEach(([key, value]) => {
-      if (value) {
-        localStorage.setItem(key, typeof value === 'object' ? JSON.stringify(value) : value);
+      if (!response.ok) {
+        throw new Error(result.message || 'Authentication failed');
       }
-    });
 
-    // Redirect to dashboard
-    window.location.href = '/admin/dashboard';
+      if (!result.data || !result.data.token) {
+        throw new Error('Invalid response from server');
+      }
 
-  } catch (err) {
-    setError(err.message || 'Login failed. Please try again.');
-    console.error('Login error:', err);
-  } finally {
-    setIsLoading(false);
-  }
-};
+      const { token, name, role } = result.data;
 
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', name);
+      localStorage.setItem('role', role);
+      
+      setIsAuthenticated(true);
+    } catch (err) {
+      setError(err.message || 'Login failed. Please try again.');
+      console.error('Login error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Rest of your component remains the same
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-black flex items-center justify-center px-4">
       <div className="w-full max-w-md">

@@ -30,15 +30,8 @@ app.use('/api/auth', require('./routes/authRoutes'));
 
 app.use('/api/posts', require('./routes/postRoutes'));
 
-app.use('/api/categories', require('./routes/categoryRoutes'));
-
-app.use('/api', require('./routes/commentRoutes'));
-
 // Add static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, '../../public/uploads')));
-
-// Add media routes
-app.use('/api/media', require('./routes/mediaRoutes'));
 
 // Add to server.js
 app.use('/api/appointments', require('./routes/appointmentRoutes'));

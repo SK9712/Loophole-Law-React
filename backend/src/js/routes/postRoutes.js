@@ -7,7 +7,6 @@ const {
   getPost,
   updatePost,
   deletePost,
-  getPostsByCategory,
   getPostsByTag,
   recordView,
   toggleLike,
@@ -20,7 +19,6 @@ router.route('/')
   .get(getPosts)
   .post(protect, authorize('admin', 'author'), createPost);
 
-router.get('/category/:slug', getPostsByCategory);
 router.get('/tag/:tag', getPostsByTag);
 
 // Search routes

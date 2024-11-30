@@ -1,5 +1,4 @@
 const Post = require('../models/Post');
-const Category = require('../models/Category');
 const path = require('path');
 const fs = require('fs').promises;
 
@@ -253,32 +252,6 @@ exports.deletePost = async (req, res) => {
     res.json({
       success: true,
       data: {}
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
-
-exports.getPostsByCategory = async (req, res) => {
-  try {
-    const category = await Category.findOne({ slug: req.params.slug });
-    if (!category) {
-      return res.status(404).json({
-        success: false,
-        message: 'Category not found'
-      });
-    }
-
-    const posts = await Post.find({ category: category._id })
-      .populate('author', 'name')
-      .populate('category', 'name slug');
-
-    res.json({
-      success: true,
-      data: posts
     });
   } catch (error) {
     res.status(400).json({

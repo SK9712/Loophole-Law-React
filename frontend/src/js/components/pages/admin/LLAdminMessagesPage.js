@@ -230,11 +230,6 @@ const LLAdminMessagesPage = () => {
           </select>
           <button className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 
                            text-gray-300 rounded-lg border border-slate-700 transition-colors">
-            <Filter className="w-5 h-5" />
-            Filter
-          </button>
-          <button className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 
-                           text-gray-300 rounded-lg border border-slate-700 transition-colors">
             <MoreVertical className="w-5 h-5" />
             More
           </button>

@@ -42,6 +42,8 @@ app.use('/api/appointments', require('./routes/appointmentRoutes'));
 
 app.use('/api/messages', require('./routes/messageRoutes'));
 
+app.use('/api/clients', require('./routes/clientRoutes'));
+
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);

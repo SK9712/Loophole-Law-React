@@ -15,6 +15,7 @@ import LLogo from '../../LLogo';
 import LLAdminDashboardPage from './LLAdminDashboardPage';
 import LLAdminPostsPage from './LLAdminPostsPage';
 import LLAdminMessagesPage from './LLAdminMessagesPage';
+import LLAdminClientsView from './LLAdminClientsView';
 import { LLAdminAppointmentsView } from './appointments/LLAdminAppointmentsView';
 
 const LLAdminContainer = () => {
@@ -26,7 +27,6 @@ const LLAdminContainer = () => {
     { icon: LayoutDashboard, text: 'Dashboard', id: 'dashboard' },
     { icon: Calendar, text: 'Appointments', id: 'appointments' },
     { icon: FileText, text: 'Posts', id: 'posts' },
-    { icon: Briefcase, text: 'Cases', id: 'cases' },
     { icon: Users, text: 'Clients', id: 'clients' },
     { icon: MessageSquare, text: 'Messages', id: 'messages' },
     { icon: Settings, text: 'Settings', id: 'settings' }
@@ -50,6 +50,8 @@ const renderPage = () => {
       return <LLAdminDashboardPage onNavigate={handleMenuClick} />;
     case 'appointments':
       return <LLAdminAppointmentsView />;
+    case 'clients':
+      return <LLAdminClientsView />;
     case 'posts':
       return <LLAdminPostsPage />;
     case 'messages':

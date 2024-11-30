@@ -14,6 +14,7 @@ import {
 import LLogo from '../../LLogo';
 import LLAdminDashboardPage from './LLAdminDashboardPage';
 import LLAdminPostsPage from './LLAdminPostsPage';
+import LLAdminMessagesPage from './LLAdminMessagesPage';
 import { LLAdminAppointmentsView } from './appointments/LLAdminAppointmentsView';
 
 const LLAdminContainer = () => {
@@ -43,22 +44,24 @@ const LLAdminContainer = () => {
     setMobileMenuOpen(false);
   };
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return <LLAdminDashboardPage onNavigate={handleMenuClick} />;
-      case 'appointments':
-        return <LLAdminAppointmentsView />;
-      case 'posts':
-        return <LLAdminPostsPage />;
-      default:
-        return (
-          <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-            <div className="text-white text-xl">Page under construction</div>
-          </div>
-        );
-    }
-  };
+const renderPage = () => {
+  switch (currentPage) {
+    case 'dashboard':
+      return <LLAdminDashboardPage onNavigate={handleMenuClick} />;
+    case 'appointments':
+      return <LLAdminAppointmentsView />;
+    case 'posts':
+      return <LLAdminPostsPage />;
+    case 'messages':
+      return <LLAdminMessagesPage />;
+    default:
+      return (
+        <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+          <div className="text-white text-xl">Page under construction</div>
+        </div>
+      );
+  }
+};
 
   return (
     <div className="min-h-screen bg-slate-900">

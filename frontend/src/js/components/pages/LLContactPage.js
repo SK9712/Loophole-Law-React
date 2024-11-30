@@ -1,10 +1,79 @@
-import React from 'react';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Phone, Mail, Clock, AlertCircle, CheckCircle } from 'lucide-react';
 
 const LLContactPage = () => {
-  const handleSubmit = (e) => {
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  // Loading and error states
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState({
+    type: '', // 'success' or 'error'
+    message: ''
+  });
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+    setIsSubmitting(true);
+    setStatus({ type: '', message: '' });
+
+    try {
+      const response = await fetch('http://localhost:5000/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send message');
+      }
+
+      // Success
+      setStatus({
+        type: 'success',
+        message: 'Thank you for your message. We will get back to you within 24 hours!'
+      });
+
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+
+    } catch (error) {
+      // Error
+      setStatus({
+        type: 'error',
+        message: error.message || 'Something went wrong. Please try again.'
+      });
+    } finally {
+      setIsSubmitting(false);
+      // Scroll to status message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -18,6 +87,22 @@ const LLContactPage = () => {
           Have questions about your legal matters? We're here to help. 
           Reach out to us and our expert team will get back to you promptly.
         </p>
+
+        {/* Status Message */}
+        {status.message && (
+          <div className={`mt-6 mx-auto max-w-2xl p-4 rounded-lg border flex items-center gap-3 ${
+            status.type === 'success' 
+              ? 'bg-green-500/10 border-green-500/20 text-green-400' 
+              : 'bg-red-500/10 border-red-500/20 text-red-400'
+          }`}>
+            {status.type === 'success' ? (
+              <CheckCircle className="w-5 h-5 flex-shrink-0" />
+            ) : (
+              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+            )}
+            <p>{status.message}</p>
+          </div>
+        )}
       </div>
 
       {/* Contact Information Cards */}
@@ -81,6 +166,10 @@ const LLContactPage = () => {
                   <label className="block text-sm font-medium text-gray-300 mb-2">First Name</label>
                   <input
                     type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
                     className="w-full px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg 
                              text-white placeholder-gray-500 focus:outline-none focus:ring-2 
                              focus:ring-green-400 focus:border-transparent"
@@ -91,6 +180,10 @@ const LLContactPage = () => {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Last Name</label>
                   <input
                     type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
                     className="w-full px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg 
                              text-white placeholder-gray-500 focus:outline-none focus:ring-2 
                              focus:ring-green-400 focus:border-transparent"
@@ -103,6 +196,10 @@ const LLContactPage = () => {
                 <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
                   className="w-full px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg 
                            text-white placeholder-gray-500 focus:outline-none focus:ring-2 
                            focus:ring-green-400 focus:border-transparent"
@@ -114,6 +211,10 @@ const LLContactPage = () => {
                 <label className="block text-sm font-medium text-gray-300 mb-2">Subject</label>
                 <input
                   type="text"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
                   className="w-full px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg 
                            text-white placeholder-gray-500 focus:outline-none focus:ring-2 
                            focus:ring-green-400 focus:border-transparent"
@@ -124,6 +225,10 @@ const LLContactPage = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Message</label>
                 <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
                   className="w-full px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg 
                            text-white placeholder-gray-500 focus:outline-none focus:ring-2 
                            focus:ring-green-400 focus:border-transparent min-h-32"
@@ -133,11 +238,22 @@ const LLContactPage = () => {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 
-                         rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                         rounded-lg transition-colors duration-200 flex items-center justify-center gap-2
+                         disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Send Message
-                <Mail className="h-4 w-4" />
+                {isSubmitting ? (
+                  <>
+                    <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    Send Message
+                    <Mail className="h-4 w-4" />
+                  </>
+                )}
               </button>
             </form>
           </div>

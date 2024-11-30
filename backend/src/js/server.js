@@ -12,13 +12,17 @@ connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors({
-  origin: 'http://localhost:3000', // Specify exact origin instead of *
-  credentials: true, // Allow credentials
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Specify allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'] // Specify allowed headers
-}));
+// CORS configuration
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+// Apply CORS with options
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: '10mb' }));
 
@@ -35,6 +39,8 @@ app.use('/uploads', express.static(path.join(__dirname, '../../public/uploads'))
 
 // Add to server.js
 app.use('/api/appointments', require('./routes/appointmentRoutes'));
+
+app.use('/api/messages', require('./routes/messageRoutes'));
 
 // Error handler
 app.use((err, req, res, next) => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Scale } from 'lucide-react';
+import LLogo from './LLogo';
 
 export default function LLawDialog() {
   const [open, setOpen] = useState(false);
@@ -36,8 +37,7 @@ export default function LLawDialog() {
       `}>
         {/* Header with Logo */}
         <div className="flex items-center gap-3 p-4 sm:p-6 bg-black">
-          <Scale className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
-          <h2 className="text-lg sm:text-xl font-bold text-green-400">LoopHoleLaw.</h2>
+          {<LLogo />}
         </div>
 
         {/* User Acknowledgement Section */}

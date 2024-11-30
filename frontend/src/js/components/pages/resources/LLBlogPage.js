@@ -4,7 +4,7 @@ import { Search, Calendar, Clock, User, Heart, X } from 'lucide-react';
 const API_URL = 'http://localhost:5000/api';
 const token = localStorage.getItem('token');
 
-function BlogDetailModal({ post, onClose, onLike }) {
+function BlogDetailModal({ post, onClose }) {
   if (!post) return null;
 
   return (
@@ -41,13 +41,6 @@ function BlogDetailModal({ post, onClose, onLike }) {
               <Calendar className="w-4 h-4" />
               {new Date(post.createdAt).toLocaleDateString()}
             </div>
-            <button 
-              onClick={() => onLike(post.slug)}
-              className="flex items-center gap-2 text-slate-400 hover:text-red-400 transition-colors"
-            >
-              <Heart className="w-4 h-4" />
-              <span>{post.likes?.length || 0} likes</span>
-            </button>
           </div>
 
           {post.featuredImage?.filePath && (
@@ -86,7 +79,7 @@ function BlogDetailModal({ post, onClose, onLike }) {
   );
 }
 
-function BlogPostCard({ post, onView, onLike }) {
+function BlogPostCard({ post, onView }) {
   return (
     <article
       className="group bg-slate-800/50 border border-slate-700/50 rounded-xl overflow-hidden hover:bg-slate-800/70 transition-all duration-300 hover:border-slate-600 hover:shadow-2xl hover:shadow-blue-500/10 cursor-pointer transform hover:-translate-y-1"
@@ -143,16 +136,6 @@ function BlogPostCard({ post, onView, onLike }) {
               </span>
             ))}
           </div>
-          <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              onLike(post.slug);
-            }}
-            className="flex items-center gap-2 text-slate-400 hover:text-red-400 transition-all duration-300 group"
-          >
-            <Heart className="w-4 h-4 group-hover:scale-110" />
-            <span>{post.likes?.length || 0}</span>
-          </button>
         </div>
       </div>
     </article>
@@ -206,18 +189,6 @@ const fetchPosts = async () => {
       setSelectedPost(post);
     } catch (error) {
       console.error('Error recording view:', error);
-    }
-  };
-
-  const handleLike = async (slug) => {
-    try {
-      await fetch(`${API_URL}/posts/${slug}/like`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      fetchPosts();
-    } catch (error) {
-      console.error('Error liking post:', error);
     }
   };
 
@@ -276,7 +247,6 @@ const fetchPosts = async () => {
                   key={post._id}
                   post={post}
                   onView={recordView}
-                  onLike={handleLike}
                 />
               ))}
             </div>
@@ -294,7 +264,6 @@ const fetchPosts = async () => {
         <BlogDetailModal
           post={selectedPost}
           onClose={() => setSelectedPost(null)}
-          onLike={handleLike}
         />
       )}
     </>

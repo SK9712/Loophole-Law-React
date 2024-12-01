@@ -14,6 +14,7 @@ import {
 import LLogo from '../../LLogo';
 import LLAdminDashboardPage from './LLAdminDashboardPage';
 import LLAdminPostsPage from './LLAdminPostsPage';
+import LLAdminSettingsPage from './LLAdminSettingsPage';
 import LLAdminMessagesPage from './LLAdminMessagesPage';
 import LLAdminClientsView from './LLAdminClientsView';
 import { LLAdminAppointmentsView } from './appointments/LLAdminAppointmentsView';
@@ -56,6 +57,8 @@ const renderPage = () => {
       return <LLAdminPostsPage />;
     case 'messages':
       return <LLAdminMessagesPage />;
+    case 'settings':
+      return <LLAdminSettingsPage />;
     default:
       return (
         <div className="min-h-screen bg-slate-900 flex items-center justify-center">

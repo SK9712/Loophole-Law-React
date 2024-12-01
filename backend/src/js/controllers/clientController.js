@@ -214,3 +214,38 @@ exports.updateLastContact = asyncHandler(async (req, res, next) => {
     data: client
   });
 });
+
+// clientController.js
+exports.getClientStats = asyncHandler(async (req, res) => {
+  const today = new Date();
+  const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+
+  // Get active clients this month
+  const currentMonthClients = await Client.countDocuments({
+    status: 'Active',
+    createdAt: { $gte: thisMonth }
+  });
+
+  // Get active clients last month
+  const lastMonthClients = await Client.countDocuments({
+    status: 'Active',
+    createdAt: {
+      $gte: lastMonth,
+      $lt: thisMonth
+    }
+  });
+
+  // Calculate percentage change
+  const change = lastMonthClients === 0 
+    ? 100 
+    : ((currentMonthClients - lastMonthClients) / lastMonthClients) * 100;
+
+  res.json({
+    success: true,
+    data: {
+      total: currentMonthClients,
+      change: Number(change.toFixed(1))
+    }
+  });
+});

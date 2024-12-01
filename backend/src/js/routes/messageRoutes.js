@@ -1,116 +1,33 @@
-// routes/messageRoutes.js
 const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/auth');
-const Message = require('../models/Message');
+const {
+  createMessage,
+  getMessages,
+  getMessage,
+  updateMessageStatus,
+  deleteMessage,
+  getMessageStats
+} = require('../controllers/messageController');
 
-// Create a new message (Public)
-router.post('/', async (req, res) => {
-  try {
-    const message = await Message.create(req.body);
-    res.status(201).json({
-      success: true,
-      data: message
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
-  }
-});
+// Public routes
+router.post('/', createMessage);
 
-// Get all messages (Admin only)
-router.get('/', protect, authorize('admin'), async (req, res) => {
-  try {
-    const messages = await Message.find().sort('-createdAt');
-    res.status(200).json({
-      success: true,
-      count: messages.length,
-      data: messages
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-});
+// Protected admin routes
+router.use(protect);
+router.use(authorize('admin'));
 
-// Get single message (Admin only)
-router.get('/:id', protect, authorize('admin'), async (req, res) => {
-  try {
-    const message = await Message.findById(req.params.id);
-    
-    if (!message) {
-      return res.status(404).json({
-        success: false,
-        message: 'Message not found'
-      });
-    }
+router.get('/stats', getMessageStats);
 
-    res.status(200).json({
-      success: true,
-      data: message
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-});
+router
+  .route('/')
+  .get(getMessages);
 
-// Update message status (Admin only)
-router.patch('/:id/status', protect, authorize('admin'), async (req, res) => {
-  try {
-    const message = await Message.findByIdAndUpdate(
-      req.params.id,
-      { status: req.body.status },
-      { new: true, runValidators: true }
-    );
+router
+  .route('/:id')
+  .get(getMessage)
+  .delete(deleteMessage);
 
-    if (!message) {
-      return res.status(404).json({
-        success: false,
-        message: 'Message not found'
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: message
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-});
-
-// Delete message (Admin only)
-router.delete('/:id', protect, authorize('admin'), async (req, res) => {
-  try {
-    const message = await Message.findByIdAndDelete(req.params.id);
-
-    if (!message) {
-      return res.status(404).json({
-        success: false,
-        message: 'Message not found'
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: {}
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-});
+router.patch('/:id/status', updateMessageStatus);
 
 module.exports = router;

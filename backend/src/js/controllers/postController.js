@@ -1,6 +1,7 @@
 const Post = require('../models/Post');
 const path = require('path');
 const fs = require('fs').promises;
+const asyncHandler = require('../middleware/async');
 
 // Helper function to decode and save base64 image
 const saveBase64Image = async (base64String, title) => {
@@ -499,3 +500,37 @@ exports.getRelatedPosts = async (req, res) => {
     });
   }
 };
+
+exports.getPostStats = asyncHandler(async (req, res) => {
+  const today = new Date();
+  const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+
+  // Get current month's published posts
+  const currentMonthPosts = await Post.countDocuments({
+    status: 'published',
+    publishedAt: { $gte: thisMonth }
+  });
+
+  // Get last month's published posts
+  const lastMonthPosts = await Post.countDocuments({
+    status: 'published',
+    publishedAt: {
+      $gte: lastMonth,
+      $lt: thisMonth
+    }
+  });
+
+  // Calculate percentage change
+  const change = lastMonthPosts === 0 
+    ? 100 
+    : ((currentMonthPosts - lastMonthPosts) / lastMonthPosts) * 100;
+
+  res.json({
+    success: true,
+    data: {
+      total: currentMonthPosts,
+      change: Number(change.toFixed(1))
+    }
+  });
+});

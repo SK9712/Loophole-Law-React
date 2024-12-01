@@ -6,7 +6,8 @@ const {
   createClient,
   updateClient,
   deleteClient,
-  updateLastContact
+  updateLastContact,
+  getClientStats
 } = require('../controllers/clientController');
 
 const { protect, authorize } = require('../middleware/auth');
@@ -21,6 +22,8 @@ router
   .route('/')
   .get(getClients)
   .post(createClient);
+
+router.get('/stats', protect, authorize('admin'), getClientStats);
 
 router
   .route('/:id')

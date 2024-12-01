@@ -9,7 +9,8 @@ const {
   updateAppointmentStatus,
   cancelAppointment,
   deleteAppointment,
-  getAvailableSlots
+  getAvailableSlots,
+  getAppointmentStats
 } = require('../controllers/appointmentController');
 
 const { protect, authorize } = require('../middleware/auth');
@@ -25,6 +26,8 @@ router.use(authorize('admin', 'author'));
 router.route('/').get(getAppointments);
 router.route('/today').get(getTodayAppointments);
 router.route('/upcoming').get(getUpcomingAppointments);
+
+router.get('/stats', protect, authorize('admin'), getAppointmentStats);
 
 router.route('/:id')
   .get(getAppointment);

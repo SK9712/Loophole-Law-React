@@ -12,7 +12,8 @@ const {
   toggleLike,
   searchPosts,
   getPopularPosts,
-  getRelatedPosts
+  getRelatedPosts,
+  getPostStats
 } = require('../controllers/postController');
 
 router.route('/')
@@ -25,6 +26,7 @@ router.get('/tag/:tag', getPostsByTag);
 router.get('/search', searchPosts);
 router.get('/popular', getPopularPosts);
 router.get('/:slug/related', getRelatedPosts);
+router.get('/stats', protect, authorize('admin'), getPostStats);
 
 // Analytics routes
 router.post('/:slug/view', recordView);
@@ -34,5 +36,6 @@ router.route('/:slug')
   .get(getPost)
   .put(protect, authorize('admin', 'author'), updatePost)
   .delete(protect, authorize('admin', 'author'), deletePost);
+
 
 module.exports = router;

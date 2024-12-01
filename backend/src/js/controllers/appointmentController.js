@@ -241,3 +241,35 @@ exports.getAvailableSlots = asyncHandler(async (req, res, next) => {
     data: availableSlots
   });
 });
+
+exports.getAppointmentStats = asyncHandler(async (req, res) => {
+  const today = new Date();
+  const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+
+  // Get current month's appointments
+  const currentMonthAppointments = await Appointment.countDocuments({
+    createdAt: { $gte: thisMonth }
+  });
+
+  // Get last month's appointments
+  const lastMonthAppointments = await Appointment.countDocuments({
+    createdAt: {
+      $gte: lastMonth,
+      $lt: thisMonth
+    }
+  });
+
+  // Calculate percentage change
+  const change = lastMonthAppointments === 0 
+    ? 100 
+    : ((currentMonthAppointments - lastMonthAppointments) / lastMonthAppointments) * 100;
+
+  res.json({
+    success: true,
+    data: {
+      total: currentMonthAppointments,
+      change: Number(change.toFixed(1))
+    }
+  });
+});

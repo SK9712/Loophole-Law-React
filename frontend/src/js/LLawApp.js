@@ -30,6 +30,7 @@ import LLegalStaffPage from './components/pages/team/LLegalStaffPage';
 import LLPracticeAreasPage from './components/pages/practice-areas/LLPracticeAreasPage';
 import LLCriminalLawPage from './components/pages/practice-areas/LLCriminalLawPage';
 import LLCivilLawPage from './components/pages/practice-areas/LLCivilLawPage';
+import LLCyberLawPage from './components/pages/practice-areas/LLCyberLawPage';
 import LLBankingLawPage from './components/pages/practice-areas/LLBankingLawPage';
 import LLRegistrationLawPage from './components/pages/practice-areas/LLRegistrationLawPage';
 import LLCorporateLawPage from './components/pages/practice-areas/LLCorporateLawPage';
@@ -109,6 +110,7 @@ function LLawApp() {
           <Route path="/practice-areas" element={<LLPracticeAreasPage />} />
           <Route path="/practice-areas/criminal-law" element={<LLCriminalLawPage />} />
           <Route path="/practice-areas/civil-law" element={<LLCivilLawPage />} />
+          <Route path="/practice-areas/cyber-law" element={<LLCyberLawPage />} />
           <Route path="/practice-areas/banking-law" element={<LLBankingLawPage />} />
           <Route path="/practice-areas/registration-law" element={<LLRegistrationLawPage />} />
           <Route path="/practice-areas/corporate-law" element={<LLCorporateLawPage />} />

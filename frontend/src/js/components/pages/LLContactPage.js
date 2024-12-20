@@ -118,8 +118,8 @@ const LLContactPage = () => {
                 <p className="text-gray-400">Mon-Fri from 8am to 6pm</p>
               </div>
             </div>
-            <a href="tel:+15551234567" className="text-green-400 hover:text-green-300 transition-colors">
-              +1 (555) 123-4567
+            <a href="tel:+919539650421" className="text-green-400 hover:text-green-300 transition-colors">
+              +91 9539650421
             </a>
           </div>
 
@@ -133,8 +133,8 @@ const LLContactPage = () => {
                 <p className="text-gray-400">We'll respond within 24h</p>
               </div>
             </div>
-            <a href="mailto:contact@loopholelaw.com" className="text-green-400 hover:text-green-300 transition-colors">
-              contact@loopholelaw.com
+            <a href="mailto:loopholelawcontact@gmail.com" className="text-green-400 hover:text-green-300 transition-colors">
+              loopholelawcontact@gmail.com
             </a>
           </div>
 
@@ -173,7 +173,7 @@ const LLContactPage = () => {
                     className="w-full px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg 
                              text-white placeholder-gray-500 focus:outline-none focus:ring-2 
                              focus:ring-green-400 focus:border-transparent"
-                    placeholder="John"
+                    placeholder="Ajay"
                   />
                 </div>
                 <div>
@@ -187,7 +187,7 @@ const LLContactPage = () => {
                     className="w-full px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg 
                              text-white placeholder-gray-500 focus:outline-none focus:ring-2 
                              focus:ring-green-400 focus:border-transparent"
-                    placeholder="Doe"
+                    placeholder="Kumar"
                   />
                 </div>
               </div>
@@ -203,7 +203,7 @@ const LLContactPage = () => {
                   className="w-full px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg 
                            text-white placeholder-gray-500 focus:outline-none focus:ring-2 
                            focus:ring-green-400 focus:border-transparent"
-                  placeholder="john@example.com"
+                  placeholder="you@example.com"
                 />
               </div>
 
@@ -270,17 +270,18 @@ const LLContactPage = () => {
                   <p className="text-gray-400">Visit our office</p>
                 </div>
               </div>
-              <p className="text-green-400">
-                123 Legal Street<br />
-                New York, NY 10001<br />
-                United States
-              </p>
+               <p className="text-green-400">
+                    1st Floor, Ganga Building<br />
+                    Opposite Kollam Collectorate<br />
+                    Kollam, Kerala - 691013<br />
+                    India
+               </p>
             </div>
 
             {/* Map iframe */}
             <div className="aspect-video rounded-xl overflow-hidden border border-slate-700">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.15830869428!2d-74.119763973046!3d40.69766374874431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1645645245801!5m2!1sen!2s"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3941.2950242010273!2d76.57290401478547!3d8.892817793613391!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b05fc490d8e6121%3A0x47361e7ec745a2b6!2sVIMAL%20XEROX!5e0!3m2!1sen!2sin!4v1703084488601!5m2!1sen!2sin"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

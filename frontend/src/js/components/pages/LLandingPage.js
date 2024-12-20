@@ -74,18 +74,18 @@ const LLandingPage = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              {
-                title: "Corporate Law",
-                description: "Strategic legal solutions for businesses of all sizes"
-              },
-              {
-                title: "Intellectual Property",
-                description: "Protecting your innovations and creative assets"
-              },
-              {
-                title: "Contract Law",
-                description: "Crafting and reviewing agreements that protect your interests"
-              }
+                {
+                    title: "Criminal Law",
+                    description: "Expert defense and representation in criminal cases"
+                },
+                {
+                    title: "Cyber Law",
+                    description: "Protecting your digital rights and handling cybercrime cases"
+                },
+                {
+                    title: "Civil Law",
+                    description: "Resolving disputes and protecting your civil rights"
+                }
             ].map((service, index) => (
               <Card key={index} className="bg-slate-800/50 border border-slate-700 hover:bg-slate-800/70 transition-all p-4">
                 <h3 className="text-lg font-semibold text-white mb-2">

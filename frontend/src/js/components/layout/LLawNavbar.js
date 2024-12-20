@@ -56,10 +56,16 @@ const LLawNavbar = () => {
       href: '/practice-areas',
       subItems: [
         { text: 'Criminal Law', href: '/practice-areas/criminal-law' },
+        { text: 'Cyber Law', href: '/practice-areas/cyber-law' },
+        { text: 'Civil Law', href: '/practice-areas/civil-law' },
+        { text: 'Contract Law', href: '/practice-areas/contract-law' },
+        { text: 'Consumer Law', href: '/practice-areas/consumer-law' },
+        { text: 'Family Law', href: '/practice-areas/family-law' },
+        { text: 'Banking Law', href: '/practice-areas/banking-law' },
+        { text: 'Registration Law', href: '/practice-areas/registration-law' },
+        { text: 'Litigation', href: '/practice-areas/litigation-law' },
         { text: 'Corporate Law', href: '/practice-areas/corporate-law' },
         { text: 'Intellectual Property', href: '/practice-areas/ip-law' },
-        { text: 'Family Law', href: '/practice-areas/family-law' },
-        { text: 'Litigation', href: '/practice-areas/litigation-law' },
         { text: 'Real Estate', href: '/practice-areas/real-estate-law' },
         { text: 'Tax Law', href: '/practice-areas/tax-law' }
       ]

@@ -29,11 +29,12 @@ import LLegalStaffPage from './components/pages/team/LLegalStaffPage';
 
 import LLPracticeAreasPage from './components/pages/practice-areas/LLPracticeAreasPage';
 import LLCriminalLawPage from './components/pages/practice-areas/LLCriminalLawPage';
+import LLCivilLawPage from './components/pages/practice-areas/LLCivilLawPage';
+import LLBankingLawPage from './components/pages/practice-areas/LLBankingLawPage';
+import LLRegistrationLawPage from './components/pages/practice-areas/LLRegistrationLawPage';
 import LLCorporateLawPage from './components/pages/practice-areas/LLCorporateLawPage';
 import LLIntellectualPropertyPage from './components/pages/practice-areas/LLIntellectualPropertyPage';
 import LLFamilyLawPage from './components/pages/practice-areas/LLFamilyLawPage';
-import LLitigationLawPage from './components/pages/practice-areas/LLitigationLawPage';
-import LLRealEstateLawPage from './components/pages/practice-areas/LLRealEstateLawPage';
 import LLTaxLawPage from './components/pages/practice-areas/LLTaxLawPage';
 
 import LLAdminLoginPage from './components/pages/admin/LLAdminLoginPage';
@@ -107,11 +108,12 @@ function LLawApp() {
 
           <Route path="/practice-areas" element={<LLPracticeAreasPage />} />
           <Route path="/practice-areas/criminal-law" element={<LLCriminalLawPage />} />
+          <Route path="/practice-areas/civil-law" element={<LLCivilLawPage />} />
+          <Route path="/practice-areas/banking-law" element={<LLBankingLawPage />} />
+          <Route path="/practice-areas/registration-law" element={<LLRegistrationLawPage />} />
           <Route path="/practice-areas/corporate-law" element={<LLCorporateLawPage />} />
           <Route path="/practice-areas/ip-law" element={<LLIntellectualPropertyPage />} />
           <Route path="/practice-areas/family-law" element={<LLFamilyLawPage />} />
-          <Route path="/practice-areas/litigation-law" element={<LLitigationLawPage />} />
-          <Route path="/practice-areas/real-estate-law" element={<LLRealEstateLawPage />} />
           <Route path="/practice-areas/tax-law" element={<LLTaxLawPage />} />
 
           <Route path="/admin" element={<LLAdminLoginPage />} />
